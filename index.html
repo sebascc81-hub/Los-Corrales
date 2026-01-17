@@ -3,54 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Los Corrales ASADOS Y BROASTER FAST FOOD</title>
+    <title>Los Corrales - Gestión</title>
     <style>
-        /* ESTILO VISUAL (MONTECLARO) */
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
-        
-        header { background-color: #2b38a3; color: white; text-align: center; padding: 35px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
-        header h1 { font-size: 42px; font-weight: 900; margin: 0; letter-spacing: -1px; text-transform: uppercase; }
-        header h2 { font-size: 16px; font-weight: 700; margin: 10px 0 0 0; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; }
+        /* =========================================
+           NUEVA PALETA DE COLORES (BASADA EN EL LOGO)
+           ========================================= */
+        :root {
+            --primary-red: #c0392b;       /* Rojo intenso del logo (Asados & Broaster) */
+            --primary-yellow: #f1c40f;    /* Amarillo dorado del logo (Los Corrales) */
+            --dark-brown: #4e342e;        /* Marrón oscuro para textos (Fondo del logo) */
+            --light-cream: #fdf6e3;       /* Fondo crema cálido */
+            --focus-yellow: #fffde7;      /* Fondo amarillo muy claro para el foco */
+            --hover-red: #a93226;         /* Rojo más oscuro para hover */
+            --hover-yellow: #d4ac0d;      /* Amarillo más oscuro para hover */
+        }
 
-        .tabs-container { background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        /* ESTILO VISUAL (MONTECLARO REDISEÑADO) */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light-cream);
+            margin: 0;
+            padding: 0;
+            color: var(--dark-brown);
+        }
+        
+        header {
+            background-color: var(--primary-red);
+            color: var(--primary-yellow);
+            text-align: center;
+            padding: 35px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+        header h1 {
+            font-size: 42px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 10px 0 0 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            color: white; /* Un poco más claro para contraste */
+        }
+
+        .tabs-container {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
         .tabs { display: flex; justify-content: center; max-width: 600px; margin: 0 auto; flex-wrap: wrap; }
-        .tab-btn { flex: 1; background: none; border: none; color: #555; font-size: 13px; font-weight: 700; text-transform: uppercase; padding: 15px 5px; cursor: pointer; border-bottom: 4px solid transparent; transition: 0.3s; min-width: 80px; }
-        .tab-btn:hover { color: #2b38a3; background-color: #fcfcfc; }
-        .tab-btn.active { color: #2b38a3; border-bottom: 4px solid #2b38a3; }
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #777;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 15px 5px;
+            cursor: pointer;
+            border-bottom: 4px solid transparent;
+            transition: 0.3s;
+            min-width: 80px;
+        }
+        .tab-btn:hover { color: var(--primary-red); background-color: #fff; }
+        .tab-btn.active {
+            color: var(--primary-red);
+            border-bottom: 4px solid var(--primary-red);
+        }
 
         .main-container { max-width: 600px; margin: 0 auto 50px auto; padding: 0 20px; }
-        .tab-content { display: none; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); animation: fadeIn 0.3s ease-in-out; }
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            animation: fadeIn 0.3s ease-in-out;
+            border-top: 3px solid var(--primary-red);
+        }
         .tab-content.active { display: block; }
 
         .form-group { margin-bottom: 20px; }
         .form-row { display: flex; gap: 15px; align-items: flex-end; }
         .form-row .form-group { flex: 1; }
-        label { display: block; margin-bottom: 8px; color: #444; font-weight: 700; font-size: 12px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; font-family: inherit; background-color: #fff; }
-        input:focus, select:focus { outline: none; border-color: #2b38a3; background-color: #f8fbff; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-brown);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            font-family: inherit;
+            background-color: #fff;
+            color: var(--dark-brown);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            background-color: var(--focus-yellow);
+            box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.1);
+        }
 
-        .btn-submit { width: 100%; background-color: #2b38a3; color: white; border: none; padding: 16px; font-size: 16px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: background 0.3s; }
-        .btn-submit:hover { background-color: #1a237e; }
-        .btn-gasto { background-color: #c62828; }
-        .btn-gasto:hover { background-color: #b71c1c; }
-        .btn-menu { background-color: #f57c00; }
-        .btn-menu:hover { background-color: #e65100; }
+        /* BOTONES PRINCIPALES (ROJO) */
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary-red);
+            color: var(--primary-yellow);
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 10px;
+            transition: background 0.3s;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
+        .btn-submit:hover { background-color: var(--hover-red); color: white; }
         
-        .btn-add { background-color: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; height: 45px; width: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .btn-add:hover { background-color: #218838; }
+        /* BOTÓN GASTO (ROJO IGUAL AL PRINCIPAL PARA CONSISTENCIA) */
+        .btn-gasto { background-color: var(--primary-red); }
+        .btn-gasto:hover { background-color: var(--hover-red); }
+
+        /* BOTÓN MENÚ Y AGREGAR (AMARILLO DORADO) */
+        .btn-menu {
+            background-color: var(--primary-yellow);
+            color: var(--dark-brown);
+        }
+        .btn-menu:hover { background-color: var(--hover-yellow); }
+        
+        .btn-add {
+            background-color: var(--primary-yellow);
+            color: var(--dark-brown);
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 900;
+            height: 45px;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: background 0.3s;
+        }
+        .btn-add:hover { background-color: var(--hover-yellow); }
 
         /* CARRITO Y TABLAS */
-        .cart-wrapper, .report-wrapper { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee; }
-        .cart-title { font-weight: 800; color: #444; margin-bottom: 10px; text-transform: uppercase; font-size: 13px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        .cart-wrapper, .report-wrapper {
+            margin-top: 20px;
+            background: #fff; /* Fondo blanco para contraste */
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+            border-left: 4px solid var(--primary-red);
+        }
+        .cart-title {
+            font-weight: 800;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 13px;
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 5px;
+        }
         
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background-color: #2b38a3; color: white; padding: 8px; text-align: left; font-weight: 600; }
-        td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
-        .col-accion { width: 30px; text-align: center; }
-        .btn-delete { color: #c62828; cursor: pointer; font-weight: bold; border: none; background: none; font-size: 16px; }
+        th {
+            background-color: var(--primary-red);
+            color: var(--primary-yellow);
+            padding: 10px;
+            text-align: left;
+            font-weight: 700;
+        }
+        td { padding: 10px; border-bottom: 1px solid #eee; color: var(--dark-brown); }
+        tr:nth-child(even) { background-color: #f9f9f9; }
         
-        .total-display { text-align: right; font-size: 20px; font-weight: 900; color: #2b38a3; margin-top: 15px; padding-top: 10px; border-top: 2px solid #2b38a3; }
-        .menu-list-wrapper { margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px; }
+        .col-accion { width: 30px; text-align: center; }
+        .btn-delete {
+            color: var(--primary-red);
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            background: none;
+            font-size: 18px;
+        }
+        .btn-delete:hover { color: var(--hover-red); }
+        
+        .total-display {
+            text-align: right;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary-red);
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 3px solid var(--primary-red);
+        }
+        .menu-list-wrapper { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; }
         .table-responsive { max-height: 250px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
         #status-message { text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px; }
 
@@ -61,8 +229,8 @@
 <body>
 
     <header>
-        <h1>Los Corrales ASADOS Y BROASTER FAST FOOD</h1>
-        <h2>Gestión Administrativa</h2>
+        <h1>LOS CORRALES</h1>
+        <h2>Gestión Comercial</h2>
     </header>
 
     <div class="tabs-container">
@@ -70,7 +238,7 @@
             <button class="tab-btn active" onclick="openTab('ventas')">Ventas</button>
             <button class="tab-btn" onclick="openTab('gastos')">Gastos</button>
             <button class="tab-btn" onclick="openTab('menu')">Menú</button>
-            <button class="tab-btn" onclick="openTab('reportes')" style="color:#2b38a3;">📊 Reportes</button>
+            <button class="tab-btn" onclick="openTab('reportes')">📊 Reportes</button>
         </div>
     </div>
 
@@ -83,8 +251,8 @@
                     <div class="form-group"><label>Cliente</label><input type="text" id="venta-cliente" required placeholder="Nombre cliente"></div>
                 </div>
                 
-                <div style="background: #fff; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <label style="color: #2b38a3; margin-bottom: 10px;">AGREGAR PRODUCTO:</label>
+                <div style="background: var(--focus-yellow); border: 1px solid var(--primary-yellow); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <label style="color: var(--primary-red); margin-bottom: 10px; font-size: 14px;">AGREGAR PRODUCTO:</label>
                     <div class="form-row">
                         <div class="form-group" style="flex: 3;">
                             <label>Producto</label>
@@ -128,7 +296,7 @@
         </div>
 
         <div id="menu" class="tab-content">
-            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">NUEVO ÍTEM</div>
+            <div style="text-align: center; margin-bottom: 20px; color: var(--primary-red); font-weight: 900; font-size: 18px; text-transform: uppercase;">NUEVO ÍTEM</div>
             <form id="menu-form">
                 <div class="form-row">
                     <div class="form-group"><label>Código</label><input type="text" id="prod-codigo" required placeholder="Ej: P01"></div>
@@ -147,7 +315,7 @@
         </div>
 
         <div id="reportes" class="tab-content">
-            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">FILTRAR MOVIMIENTOS</div>
+            <div style="text-align: center; margin-bottom: 20px; color: var(--primary-red); font-weight: 900; font-size: 18px; text-transform: uppercase;">FILTRAR MOVIMIENTOS</div>
             <form id="reporte-form" onsubmit="generarReporte(event)">
                 <div class="form-group">
                     <label>Tipo de Movimiento</label>
@@ -160,7 +328,7 @@
                     <div class="form-group"><label>Desde</label><input type="date" id="rep-inicio" required></div>
                     <div class="form-group"><label>Hasta</label><input type="date" id="rep-fin" required></div>
                 </div>
-                <button type="submit" class="btn-submit" style="background-color: #555;">BUSCAR</button>
+                <button type="submit" class="btn-submit" style="background-color: var(--dark-brown); color: var(--primary-yellow);">BUSCAR</button>
             </form>
 
             <div id="report-result" class="report-wrapper" style="display:none;">
@@ -286,7 +454,7 @@
             e.preventDefault();
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = "Buscando...";
-            statusDiv.style.color = "blue";
+            statusDiv.style.color = "var(--primary-red)";
 
             const datos = {
                 action: "filtrarRegistros",
@@ -334,6 +502,7 @@
             if (carrito.length === 0) { alert("Carrito vacío"); return; }
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = 'Enviando...';
+            statusDiv.style.color = 'var(--primary-red)';
             
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
@@ -394,7 +563,7 @@
             const inputVal = document.getElementById('venta-valor');
             if(precio && precio !== "0") {
                 inputVal.value = precio;
-                inputVal.style.backgroundColor = "#e3f2fd";
+                inputVal.style.backgroundColor = "var(--focus-yellow)";
                 setTimeout(() => inputVal.style.backgroundColor = "white", 500);
             } else { inputVal.value = 0; }
         }
