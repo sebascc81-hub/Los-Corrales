@@ -5,91 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Los Corrales - Gestión</title>
     <style>
-        /* --- ESTILO (CSS) INTEGRADO --- */
+        /* =========================================
+           DISEÑO VISUAL (CSS INTEGRADO)
+           ========================================= */
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f9;
+            background-color: #f4f6f9; /* Fondo gris muy suave */
             margin: 0;
             padding: 0;
             color: #333;
         }
 
-        /* Encabezado Azul Estilo Monteclaro */
+        /* --- ENCABEZADO TIPO MONTECLARO --- */
         header {
-            background-color: #2b38a3;
+            background-color: #2b38a3; /* Azul Corporativo */
             color: white;
             text-align: center;
-            padding: 40px 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 35px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
         }
 
         header h1 {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 900;
             margin: 0;
             letter-spacing: -1px;
-            text-transform: lowercase;
+            text-transform: uppercase; /* Mayúsculas para impacto */
         }
 
         header h2 {
-            font-size: 20px;
-            font-weight: 800;
-            margin: 10px 0 5px 0;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 10px 0 0 0;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        header p {
-            font-size: 14px;
-            margin: 5px 0 0 0;
+            letter-spacing: 2px;
             opacity: 0.9;
         }
 
-        /* Pestañas */
-        .tabs {
+        /* --- PESTAÑAS DE NAVEGACIÓN --- */
+        .tabs-container {
             background-color: white;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 15px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             margin-bottom: 30px;
         }
 
+        .tabs {
+            display: flex;
+            justify-content: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .tab-btn {
+            flex: 1;
             background: none;
             border: none;
-            color: #2b38a3;
-            font-size: 15px;
+            color: #555;
+            font-size: 14px;
             font-weight: 700;
             text-transform: uppercase;
+            padding: 15px 0;
             cursor: pointer;
-            padding: 10px;
-            border-bottom: 3px solid transparent;
+            border-bottom: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: #2b38a3;
+            background-color: #fcfcfc;
         }
 
         .tab-btn.active {
-            color: #1a237e;
-            border-bottom: 3px solid #2b38a3;
+            color: #2b38a3;
+            border-bottom: 4px solid #2b38a3;
         }
 
-        /* Contenedor */
-        .container {
-            max-width: 600px;
+        /* --- CONTENEDOR DEL FORMULARIO --- */
+        .main-container {
+            max-width: 500px;
             margin: 0 auto 50px auto;
             padding: 0 20px;
         }
 
-        /* Formularios */
         .tab-content {
-            display: none;
+            display: none; /* Oculto por defecto */
             background: white;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            animation: fadeIn 0.3s ease-in-out;
         }
-        .tab-content.active { display: block; }
 
+        .tab-content.active {
+            display: block; /* Mostrar activo */
+        }
+
+        /* --- CAMPOS DEL FORMULARIO --- */
         .form-group { margin-bottom: 20px; }
         .form-row { display: flex; gap: 15px; }
         .form-row .form-group { flex: 1; }
@@ -97,103 +108,125 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            font-size: 13px;
+            color: #444;
+            font-weight: 700;
+            font-size: 12px;
             text-transform: uppercase;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #dde2e5;
-            border-radius: 4px;
-            font-size: 15px;
-            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+            font-family: inherit;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #2b38a3;
-            background-color: #fdfdff;
+            background-color: #f8fbff;
         }
 
+        /* --- BOTONES DE ACCIÓN --- */
         .btn-submit {
             width: 100%;
             background-color: #2b38a3;
             color: white;
             border: none;
-            padding: 15px;
+            padding: 16px;
             font-size: 16px;
-            font-weight: bold;
-            border-radius: 4px;
+            font-weight: 800;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            transition: background 0.3s;
         }
-        .btn-submit:hover { opacity: 0.9; }
 
+        .btn-submit:hover { background-color: #1a237e; }
+        
+        /* Botones de colores específicos */
+        .btn-gasto { background-color: #c62828; }
+        .btn-gasto:hover { background-color: #b71c1c; }
+
+        .btn-menu { background-color: #f57c00; }
+        .btn-menu:hover { background-color: #e65100; }
+
+        /* Mensajes de estado */
         #status-message {
             text-align: center;
             margin-top: 20px;
             font-weight: bold;
-            height: 20px;
+            min-height: 24px;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Móvil */
         @media (max-width: 600px) {
             .form-row { flex-direction: column; gap: 0; }
+            header h1 { font-size: 32px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;"></div>
-        <h1>LOS CORRALES</h1> 
-        <h2>GESTION COMERCIAL</h2>
-        <p>LOS CORRALES S.A.S</p>
+        <h1>LOS CORRALES</h1>
+        <h2>Gestión Comercial</h2>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('ventas')">VENTAS</button>
-        <button class="tab-btn" onclick="openTab('gastos')">GASTOS</button>
-        <button class="tab-btn" onclick="openTab('menu')">MENÚ</button>
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('ventas')">Ventas</button>
+            <button class="tab-btn" onclick="openTab('gastos')">Gastos</button>
+            <button class="tab-btn" onclick="openTab('menu')">Menú</button>
+        </div>
     </div>
 
-    <div class="container">
-        
+    <div class="main-container">
+
         <div id="ventas" class="tab-content active">
             <form id="ventas-form">
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" id="venta-cliente" required placeholder="Nombre del cliente">
+                </div>
+
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Cliente</label>
-                        <input type="text" id="venta-cliente" required placeholder="Nombre Cliente">
-                    </div>
                     <div class="form-group">
                         <label>Producto</label>
                         <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar..." onchange="autocompletarPrecio()">
                         <datalist id="lista-productos"></datalist>
                     </div>
-                </div>
-                <div class="form-row">
                     <div class="form-group">
                         <label>Valor ($)</label>
                         <input type="number" id="venta-valor" required placeholder="0">
                     </div>
-                    <div class="form-group">
-                        <label>Pago</label>
-                        <select id="venta-pago">
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Transferencia">Transferencia</option>
-                            <option value="Nequi">Nequi</option>
-                        </select>
-                    </div>
                 </div>
+
+                <div class="form-group">
+                    <label>Medio de Pago</label>
+                    <select id="venta-pago">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Nequi">Nequi</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label>Observación</label>
                     <textarea id="venta-observacion" rows="2" placeholder="Opcional"></textarea>
                 </div>
-                <button type="submit" class="btn-submit">REGISTRAR VENTA</button>
+
+                <button type="submit" class="btn-submit">Registrar Venta</button>
             </form>
         </div>
 
@@ -201,8 +234,9 @@
             <form id="gastos-form">
                 <div class="form-group">
                     <label>Proveedor</label>
-                    <input type="text" id="gasto-proveedor" required placeholder="A quién se le paga">
+                    <input type="text" id="gasto-proveedor" required placeholder="A quién se paga">
                 </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Valor ($)</label>
@@ -217,67 +251,78 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Detalle</label>
-                    <textarea id="gasto-observacion" rows="2" placeholder="Descripción"></textarea>
+                    <textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea>
                 </div>
-                <button type="submit" class="btn-submit" style="background-color: #c62828;">REGISTRAR GASTO</button>
+
+                <button type="submit" class="btn-submit btn-gasto">Registrar Gasto</button>
             </form>
         </div>
 
         <div id="menu" class="tab-content">
-            <h3 style="margin-top:0; color:#2b38a3;">Nuevo Ítem al Menú</h3>
+            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">
+                NUEVO ÍTEM AL INVENTARIO
+            </div>
             <form id="menu-form">
-                <div class="form-group">
-                    <label>Código</label>
-                    <input type="text" id="prod-codigo" required placeholder="Ej: HAM-01">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" id="prod-codigo" required placeholder="Ej: P01">
+                    </div>
+                    <div class="form-group">
+                        <label>Precio ($)</label>
+                        <input type="number" id="prod-precio" required placeholder="0">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Descripción</label>
-                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Plato">
+                    <input type="text" id="prod-descripcion" required placeholder="Nombre del plato/producto">
                 </div>
-                <div class="form-group">
-                    <label>Precio ($)</label>
-                    <input type="number" id="prod-precio" required placeholder="0">
-                </div>
-                <button type="submit" class="btn-submit" style="background-color: #ef6c00;">GUARDAR EN MENÚ</button>
+
+                <button type="submit" class="btn-submit btn-menu">Guardar en Menú</button>
             </form>
         </div>
 
         <div id="status-message"></div>
+
     </div>
 
     <script>
-        /* --- LÓGICA (JAVASCRIPT) INTEGRADA --- */
-        
-        // ¡¡IMPORTANTE!! PEGA TU URL DE APPS SCRIPT AQUÍ ABAJO ENTRE LAS COMILLAS:
+        // ------------------------------------------------------------------
+        // CONFIGURACIÓN: PEGA AQUÍ TU URL DE APPS SCRIPT
+        // ------------------------------------------------------------------
         const API_URL = "https://script.google.com/macros/s/AKfycbwSxe7Cv6YNqzZzxGI_fM_nvlRQczsbXVRCAUnMIAUTKFoeoXLXh7HjpgJrLC5AMPBV/exec";
+        // ------------------------------------------------------------------
 
         let inventarioPrecios = {};
 
-        // 1. Manejo de Pestañas
+        // 1. CAMBIAR PESTAÑAS
         function openTab(tabName) {
+            // Ocultar todo
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
+            // Mostrar selección
             document.getElementById(tabName).classList.add('active');
             
-            // Lógica simple para activar el botón correcto
+            // Activar botón (lógica simple por orden: 0=Ventas, 1=Gastos, 2=Menú)
             const buttons = document.querySelectorAll('.tab-btn');
             if(tabName === 'ventas') buttons[0].classList.add('active');
             if(tabName === 'gastos') buttons[1].classList.add('active');
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // 2. Cargar Menú desde Google Sheets
+        // 2. CARGAR MENÚ (GET)
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
                 const data = await response.json();
                 
                 const dataList = document.getElementById('lista-productos');
-                dataList.innerHTML = '';
-                inventarioPrecios = {};
+                dataList.innerHTML = ''; // Limpiar
+                inventarioPrecios = {};  // Reiniciar memoria
 
                 data.forEach(item => {
                     const option = document.createElement('option');
@@ -285,28 +330,31 @@
                     dataList.appendChild(option);
                     inventarioPrecios[item.descripcion] = item.precio;
                 });
+                console.log("Menú cargado correctamente");
             } catch (error) {
-                console.error("Error menu:", error);
+                console.error("Error al cargar menú:", error);
             }
         }
 
-        // 3. Función Principal de Envío
+        // 3. ENVIAR DATOS (POST)
         async function enviarDatos(datos) {
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = 'Guardando...';
-            statusDiv.style.color = 'blue';
+            statusDiv.style.color = '#2b38a3';
 
             try {
+                // Fetch simple usando text/plain para evitar errores de CORS con Google
                 const response = await fetch(API_URL, {
                     method: "POST",
                     body: JSON.stringify(datos)
                 });
+                
                 const result = await response.json();
                 
                 if(result.status === "success") {
-                    statusDiv.textContent = '¡Guardado Correctamente!';
+                    statusDiv.textContent = '¡REGISTRO GUARDADO CON ÉXITO!';
                     statusDiv.style.color = 'green';
-                    setTimeout(() => statusDiv.textContent = '', 3000);
+                    setTimeout(() => statusDiv.textContent = '', 3000); // Borrar mensaje a los 3 seg
                     return true;
                 } else {
                     throw new Error(result.message);
@@ -318,10 +366,26 @@
             }
         }
 
-        // 4. Listeners de los Formularios
+        // 4. AUTOCOMPLETAR PRECIO
+        function autocompletarPrecio() {
+            const prodInput = document.getElementById('venta-producto');
+            const valInput = document.getElementById('venta-valor');
+            const producto = prodInput.value;
+
+            if(inventarioPrecios[producto]) {
+                valInput.value = inventarioPrecios[producto];
+                // Efecto visual de "flash"
+                valInput.style.backgroundColor = "#e3f2fd";
+                setTimeout(() => valInput.style.backgroundColor = "white", 500);
+            }
+        }
+
+        // --- EVENTOS DE LOS BOTONES (LISTENERS) ---
+
+        // GUARDAR VENTA
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = {
+            const datos = {
                 action: "guardarVenta",
                 cliente: document.getElementById('venta-cliente').value,
                 producto: document.getElementById('venta-producto').value,
@@ -329,48 +393,41 @@
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value
             };
-            if(await enviarDatos(data)) document.getElementById('ventas-form').reset();
+            // Si se guarda bien, limpiar formulario
+            if(await enviarDatos(datos)) document.getElementById('ventas-form').reset();
         });
 
+        // GUARDAR GASTO
         document.getElementById('gastos-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = {
+            const datos = {
                 action: "guardarGasto",
                 proveedor: document.getElementById('gasto-proveedor').value,
                 valor: document.getElementById('gasto-valor').value,
                 pago: document.getElementById('gasto-pago').value,
                 observacion: document.getElementById('gasto-observacion').value
             };
-            if(await enviarDatos(data)) document.getElementById('gastos-form').reset();
+            if(await enviarDatos(datos)) document.getElementById('gastos-form').reset();
         });
 
+        // GUARDAR EN MENÚ
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = {
+            const datos = {
                 action: "guardarProducto",
                 codigo: document.getElementById('prod-codigo').value,
                 descripcion: document.getElementById('prod-descripcion').value,
                 precio: document.getElementById('prod-precio').value
             };
-            if(await enviarDatos(data)) {
+            if(await enviarDatos(datos)) {
                 document.getElementById('menu-form').reset();
-                cargarMenu();
+                cargarMenu(); // Recargar la lista para que aparezca en Ventas
             }
         });
 
-        // 5. Autocompletar precio
-        function autocompletarPrecio() {
-            const prod = document.getElementById('venta-producto').value;
-            if(inventarioPrecios[prod]) {
-                const inputVal = document.getElementById('venta-valor');
-                inputVal.value = inventarioPrecios[prod];
-                inputVal.style.backgroundColor = "#e8f0fe"; // Destello visual
-                setTimeout(() => inputVal.style.backgroundColor = "white", 500);
-            }
-        }
-
-        // Iniciar
+        // INICIAR: Cargar menú al abrir la página
         cargarMenu();
+
     </script>
 </body>
 </html>
