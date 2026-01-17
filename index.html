@@ -275,8 +275,8 @@
     </div>
 
     <script>
-        // URL DE TU APPS SCRIPT
-        const API_URL = "https://script.google.com/macros/s/AKfycbyH4D06pcZlkY5rS6SnfW7WENlJCt2-bHOYU7P5l1RWhr1EnMfw8pU92dUkAUjYP1Pe/exec";
+        // URL ACTUALIZADA
+        const API_URL = "https://script.google.com/macros/s/AKfycbz2Q6M-Ydh32BjZ5siIYx42q-Wi_78FbZ-mNwH0tolivDXtZW4qe4O5SPB5b7tQOviE/exec";
 
         // Fecha de hoy por defecto
         document.getElementById('venta-fecha').valueAsDate = new Date();
@@ -294,7 +294,7 @@
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // 2. CARGAR MENÚ EN LISTA DESPLEGABLE CON EL PRECIO PEGADO
+        // 2. CARGAR MENÚ CON PRECIO OCULTO
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
@@ -317,7 +317,7 @@
                     option.value = textoVisible; 
                     option.text = textoVisible;
                     
-                    // SOLUCIÓN: Guardamos el precio en un atributo oculto llamado "data-precio"
+                    // Guardamos el precio en el atributo data-precio
                     option.dataset.precio = item.precio; 
                     
                     select.appendChild(option);
@@ -358,7 +358,7 @@
             }
         }
 
-        // 4. PRECIO AUTOMÁTICO (CORREGIDO)
+        // 4. PRECIO AUTOMÁTICO
         function autocompletarPrecio() {
             const select = document.getElementById('venta-producto');
             // Buscamos la opción seleccionada actualmente
@@ -391,7 +391,7 @@
                 mes: fechaObj.getMonth() + 1,
                 anio: fechaObj.getFullYear(),
                 cliente: document.getElementById('venta-cliente').value,
-                producto: document.getElementById('venta-producto').value, // Envía lo seleccionado de la lista
+                producto: document.getElementById('venta-producto').value, 
                 valor: document.getElementById('venta-valor').value,
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value
@@ -400,7 +400,6 @@
             if(await enviarDatos(datos)) {
                 document.getElementById('ventas-form').reset();
                 document.getElementById('venta-fecha').valueAsDate = new Date(); 
-                // Recargar el menú por si acaso se agregó algo nuevo mientras tanto
                 cargarMenu();
             }
         });
