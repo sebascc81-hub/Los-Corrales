@@ -4,7 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Los Corrales - Gestión</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* --- ESTILO (CSS) INTEGRADO --- */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Encabezado Azul Estilo Monteclaro */
+        header {
+            background-color: #2b38a3;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 48px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -1px;
+            text-transform: lowercase;
+        }
+
+        header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 10px 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 14px;
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Pestañas */
+        .tabs {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #2b38a3;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #1a237e;
+            border-bottom: 3px solid #2b38a3;
+        }
+
+        /* Contenedor */
+        .container {
+            max-width: 600px;
+            margin: 0 auto 50px auto;
+            padding: 0 20px;
+        }
+
+        /* Formularios */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .tab-content.active { display: block; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dde2e5;
+            border-radius: 4px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2b38a3;
+            background-color: #fdfdff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #2b38a3;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+
+        #status-message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            height: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
 </head>
 <body>
 
@@ -12,8 +151,7 @@
         <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">INMOBILIARIA</div>
         <h1>los corrales</h1> 
         <h2>GESTION COMERCIAL</h2>
-        <p>LOS CORRALES S.A.S</p>
-        <p>901.968.559-8</p> 
+        <p>LOS CORRALES S.A.S - 901.968.559-8</p>
     </header>
 
     <div class="tabs">
@@ -33,18 +171,17 @@
                     </div>
                     <div class="form-group">
                         <label>Producto</label>
-                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar plato..." onchange="autocompletarPrecio()">
+                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar..." onchange="autocompletarPrecio()">
                         <datalist id="lista-productos"></datalist>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label>Valor ($)</label>
                         <input type="number" id="venta-valor" required placeholder="0">
                     </div>
                     <div class="form-group">
-                        <label>Medio de Pago</label>
+                        <label>Pago</label>
                         <select id="venta-pago">
                             <option value="Efectivo">Efectivo</option>
                             <option value="Transferencia">Transferencia</option>
@@ -52,12 +189,10 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label>Observación</label>
                     <textarea id="venta-observacion" rows="2" placeholder="Opcional"></textarea>
                 </div>
-
                 <button type="submit" class="btn-submit">REGISTRAR VENTA</button>
             </form>
         </div>
@@ -84,14 +219,14 @@
                 </div>
                 <div class="form-group">
                     <label>Detalle</label>
-                    <textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea>
+                    <textarea id="gasto-observacion" rows="2" placeholder="Descripción"></textarea>
                 </div>
                 <button type="submit" class="btn-submit" style="background-color: #c62828;">REGISTRAR GASTO</button>
             </form>
         </div>
 
         <div id="menu" class="tab-content">
-            <h3 style="margin-top:0; color:#2b38a3;">Agregar Nuevo Ítem</h3>
+            <h3 style="margin-top:0; color:#2b38a3;">Nuevo Ítem al Menú</h3>
             <form id="menu-form">
                 <div class="form-group">
                     <label>Código</label>
@@ -99,7 +234,7 @@
                 </div>
                 <div class="form-group">
                     <label>Descripción</label>
-                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Plato / Bebida">
+                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Plato">
                 </div>
                 <div class="form-group">
                     <label>Precio ($)</label>
@@ -112,6 +247,130 @@
         <div id="status-message"></div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script>
+        /* --- LÓGICA (JAVASCRIPT) INTEGRADA --- */
+        
+        // ¡¡IMPORTANTE!! PEGA TU URL DE APPS SCRIPT AQUÍ ABAJO ENTRE LAS COMILLAS:
+        const API_URL = "https://script.google.com/macros/s/AKfycbwSxe7Cv6YNqzZzxGI_fM_nvlRQczsbXVRCAUnMIAUTKFoeoXLXh7HjpgJrLC5AMPBV/exec";
+
+        let inventarioPrecios = {};
+
+        // 1. Manejo de Pestañas
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            
+            // Lógica simple para activar el botón correcto
+            const buttons = document.querySelectorAll('.tab-btn');
+            if(tabName === 'ventas') buttons[0].classList.add('active');
+            if(tabName === 'gastos') buttons[1].classList.add('active');
+            if(tabName === 'menu') buttons[2].classList.add('active');
+        }
+
+        // 2. Cargar Menú desde Google Sheets
+        async function cargarMenu() {
+            try {
+                const response = await fetch(`${API_URL}?action=leerMenu`);
+                const data = await response.json();
+                
+                const dataList = document.getElementById('lista-productos');
+                dataList.innerHTML = '';
+                inventarioPrecios = {};
+
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.descripcion;
+                    dataList.appendChild(option);
+                    inventarioPrecios[item.descripcion] = item.precio;
+                });
+            } catch (error) {
+                console.error("Error menu:", error);
+            }
+        }
+
+        // 3. Función Principal de Envío
+        async function enviarDatos(datos) {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = 'Guardando...';
+            statusDiv.style.color = 'blue';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify(datos)
+                });
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    statusDiv.textContent = '¡Guardado Correctamente!';
+                    statusDiv.style.color = 'green';
+                    setTimeout(() => statusDiv.textContent = '', 3000);
+                    return true;
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                statusDiv.textContent = 'Error: ' + error.message;
+                statusDiv.style.color = 'red';
+                return false;
+            }
+        }
+
+        // 4. Listeners de los Formularios
+        document.getElementById('ventas-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                action: "guardarVenta",
+                cliente: document.getElementById('venta-cliente').value,
+                producto: document.getElementById('venta-producto').value,
+                valor: document.getElementById('venta-valor').value,
+                pago: document.getElementById('venta-pago').value,
+                observacion: document.getElementById('venta-observacion').value
+            };
+            if(await enviarDatos(data)) document.getElementById('ventas-form').reset();
+        });
+
+        document.getElementById('gastos-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                action: "guardarGasto",
+                proveedor: document.getElementById('gasto-proveedor').value,
+                valor: document.getElementById('gasto-valor').value,
+                pago: document.getElementById('gasto-pago').value,
+                observacion: document.getElementById('gasto-observacion').value
+            };
+            if(await enviarDatos(data)) document.getElementById('gastos-form').reset();
+        });
+
+        document.getElementById('menu-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                action: "guardarProducto",
+                codigo: document.getElementById('prod-codigo').value,
+                descripcion: document.getElementById('prod-descripcion').value,
+                precio: document.getElementById('prod-precio').value
+            };
+            if(await enviarDatos(data)) {
+                document.getElementById('menu-form').reset();
+                cargarMenu();
+            }
+        });
+
+        // 5. Autocompletar precio
+        function autocompletarPrecio() {
+            const prod = document.getElementById('venta-producto').value;
+            if(inventarioPrecios[prod]) {
+                const inputVal = document.getElementById('venta-valor');
+                inputVal.value = inventarioPrecios[prod];
+                inputVal.style.backgroundColor = "#e8f0fe"; // Destello visual
+                setTimeout(() => inputVal.style.backgroundColor = "white", 500);
+            }
+        }
+
+        // Iniciar
+        cargarMenu();
+    </script>
 </body>
 </html>
