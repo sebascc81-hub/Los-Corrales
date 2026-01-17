@@ -16,7 +16,6 @@
             color: #333;
         }
 
-        /* Encabezado Azul */
         header {
             background-color: #2b38a3;
             color: white;
@@ -42,7 +41,6 @@
             opacity: 0.9;
         }
 
-        /* Pestañas */
         .tabs-container {
             background-color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -73,7 +71,6 @@
         .tab-btn:hover { color: #2b38a3; background-color: #fcfcfc; }
         .tab-btn.active { color: #2b38a3; border-bottom: 4px solid #2b38a3; }
 
-        /* Contenedor Principal */
         .main-container {
             max-width: 500px;
             margin: 0 auto 50px auto;
@@ -91,7 +88,6 @@
 
         .tab-content.active { display: block; }
 
-        /* Formularios */
         .form-group { margin-bottom: 20px; }
         .form-row { display: flex; gap: 15px; }
         .form-row .form-group { flex: 1; }
@@ -121,7 +117,6 @@
             background-color: #f8fbff;
         }
 
-        /* Botones */
         .btn-submit {
             width: 100%;
             background-color: #2b38a3;
@@ -191,9 +186,10 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Producto</label>
-                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar..." onchange="autocompletarPrecio()">
-                        <datalist id="lista-productos"></datalist>
+                        <label>Código o Producto</label>
+                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Escribe el código..." onchange="autocompletarPrecio()">
+                        <datalist id="lista-productos">
+                            </datalist>
                     </div>
                     <div class="form-group">
                         <label>Valor ($)</label>
@@ -276,18 +272,14 @@
     </div>
 
     <script>
-        // ------------------------------------------------------------------
-        // TU NUEVA URL DE APPS SCRIPT:
-        // ------------------------------------------------------------------
+        // TU URL ACTUAL (NO LA TOQUES)
         const API_URL = "https://script.google.com/macros/s/AKfycbyH4D06pcZlkY5rS6SnfW7WENlJCt2-bHOYU7P5l1RWhr1EnMfw8pU92dUkAUjYP1Pe/exec";
-        // ------------------------------------------------------------------
 
         let inventarioPrecios = {};
 
-        // Establecer fecha de hoy por defecto al cargar
+        // Fecha de hoy por defecto
         document.getElementById('venta-fecha').valueAsDate = new Date();
 
-        // 1. CONTROL DE PESTAÑAS
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -300,7 +292,7 @@
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // 2. CARGAR MENÚ (GET)
+        // CARGAR MENÚ: AHORA INCLUYE EL CÓDIGO EN LA BÚSQUEDA
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
@@ -310,19 +302,31 @@
                 dataList.innerHTML = ''; 
                 inventarioPrecios = {};
 
+                if(data.length === 0) {
+                    console.log("No se encontraron productos en la hoja MENU");
+                }
+
                 data.forEach(item => {
                     const option = document.createElement('option');
-                    option.value = item.descripcion;
+                    
+                    // TRUCO: Unimos Codigo y Descripcion para poder buscar por ambos
+                    // Ejemplo: "001 - Hamburguesa"
+                    const valorCompuesto = `${item.codigo} - ${item.descripcion}`;
+                    
+                    option.value = valorCompuesto; 
                     dataList.appendChild(option);
-                    inventarioPrecios[item.descripcion] = item.precio;
+                    
+                    // Guardamos el precio asociado a ese texto compuesto
+                    inventarioPrecios[valorCompuesto] = item.precio;
                 });
-                console.log("Menú actualizado");
+                console.log("Menú actualizado con códigos.");
             } catch (error) {
                 console.error("Error al cargar menú:", error);
+                document.getElementById('status-message').textContent = "Error de conexión con la hoja MENU";
             }
         }
 
-        // 3. ENVIAR DATOS (POST)
+        // ENVIAR DATOS
         async function enviarDatos(datos) {
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = 'Guardando en la nube...';
@@ -351,9 +355,10 @@
             }
         }
 
-        // 4. AUTOCOMPLETAR PRECIO
+        // AUTOCOMPLETAR
         function autocompletarPrecio() {
             const prod = document.getElementById('venta-producto').value;
+            // Busca la coincidencia exacta "CODIGO - NOMBRE"
             if(inventarioPrecios[prod]) {
                 const input = document.getElementById('venta-valor');
                 input.value = inventarioPrecios[prod];
@@ -362,15 +367,13 @@
             }
         }
 
-        // --- LISTENERS (BOTONES DE GUARDAR) ---
+        // --- LISTENERS ---
 
-        // GUARDAR VENTA
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Procesar la fecha manual
             const fechaInput = document.getElementById('venta-fecha').value; 
-            const fechaObj = new Date(fechaInput + 'T00:00:00'); // T00:00:00 evita problemas de zona horaria
+            const fechaObj = new Date(fechaInput + 'T00:00:00');
 
             const datos = {
                 action: "guardarVenta",
@@ -378,7 +381,7 @@
                 mes: fechaObj.getMonth() + 1,
                 anio: fechaObj.getFullYear(),
                 cliente: document.getElementById('venta-cliente').value,
-                producto: document.getElementById('venta-producto').value,
+                producto: document.getElementById('venta-producto').value, // Enviará "CODIGO - NOMBRE"
                 valor: document.getElementById('venta-valor').value,
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value
@@ -386,11 +389,10 @@
             
             if(await enviarDatos(datos)) {
                 document.getElementById('ventas-form').reset();
-                document.getElementById('venta-fecha').valueAsDate = new Date(); // Resetear fecha a hoy
+                document.getElementById('venta-fecha').valueAsDate = new Date(); 
             }
         });
 
-        // GUARDAR GASTO
         document.getElementById('gastos-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -403,7 +405,6 @@
             if(await enviarDatos(datos)) document.getElementById('gastos-form').reset();
         });
 
-        // GUARDAR PRODUCTO EN MENÚ
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
