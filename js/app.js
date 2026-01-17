@@ -1,18 +1,22 @@
-// CONFIGURACIÓN DE TU API
+// TU URL DE APPS SCRIPT (Asegúrate de que sea la correcta)
 const API_URL = "https://script.google.com/macros/s/AKfycbwSxe7Cv6YNqzZzxGI_fM_nvlRQczsbXVRCAUnMIAUTKFoeoXLXh7HjpgJrLC5AMPBV/exec";
 
 let inventarioPrecios = {};
 
-// --- PESTAÑAS ---
+// --- LÓGICA DE PESTAÑAS ---
 function openTab(tabName) {
+    // Ocultar todas las pestañas
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    // Mostrar la seleccionada
     document.getElementById(tabName).classList.add('active');
     
+    // Iluminar botón activo
     const btns = document.querySelectorAll('.tab-btn');
     if(tabName === 'ventas') btns[0].classList.add('active');
     if(tabName === 'gastos') btns[1].classList.add('active');
-    if(tabName === 'productos') btns[2].classList.add('active');
+    if(tabName === 'menu') btns[2].classList.add('active');
 }
 
 // --- CONEXIÓN API ---
@@ -31,8 +35,9 @@ async function cargarMenu() {
             dataList.appendChild(option);
             inventarioPrecios[item.descripcion] = item.precio;
         });
+        console.log("Menú actualizado");
     } catch (error) {
-        console.error("Error menu:", error);
+        console.error("Error cargando menú:", error);
     }
 }
 
@@ -49,7 +54,7 @@ async function enviarDatos(datos) {
         const result = await response.json();
         
         if(result.status === "success") {
-            statusDiv.textContent = '¡Guardado!';
+            statusDiv.textContent = '¡Guardado Exitosamente!';
             statusDiv.style.color = 'green';
             setTimeout(() => statusDiv.textContent = '', 3000);
             return true;
@@ -63,7 +68,9 @@ async function enviarDatos(datos) {
     }
 }
 
-// --- LISTENERS ---
+// --- LISTENERS (BOTONES DE GUARDAR) ---
+
+// 1. VENTAS
 document.getElementById('ventas-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = {
@@ -77,6 +84,7 @@ document.getElementById('ventas-form').addEventListener('submit', async (e) => {
     if(await enviarDatos(data)) document.getElementById('ventas-form').reset();
 });
 
+// 2. GASTOS
 document.getElementById('gastos-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = {
@@ -89,17 +97,19 @@ document.getElementById('gastos-form').addEventListener('submit', async (e) => {
     if(await enviarDatos(data)) document.getElementById('gastos-form').reset();
 });
 
-document.getElementById('productos-form').addEventListener('submit', async (e) => {
+// 3. MENÚ (Antes "Productos")
+document.getElementById('menu-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = {
-        action: "guardarProducto",
+        action: "guardarProducto", // La acción en Apps Script sigue llamándose igual
         codigo: document.getElementById('prod-codigo').value,
         descripcion: document.getElementById('prod-descripcion').value,
         precio: document.getElementById('prod-precio').value
     };
+    
     if(await enviarDatos(data)) {
-        document.getElementById('productos-form').reset();
-        cargarMenu();
+        document.getElementById('menu-form').reset();
+        cargarMenu(); // Recargar la lista desplegable de ventas
     }
 });
 
@@ -110,4 +120,5 @@ function autocompletarPrecio() {
     }
 }
 
+// Iniciar cargando el menú
 cargarMenu();

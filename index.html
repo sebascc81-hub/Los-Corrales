@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Los Corrales - Gestión</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
     <header>
         <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">INMOBILIARIA</div>
-        <h1>los corrales</h1> <h2>GESTION COMERCIAL</h2>
-        
+        <h1>los corrales</h1> 
+        <h2>GESTION COMERCIAL</h2>
         <p>LOS CORRALES S.A.S</p>
-        <p>901.968.559-8</p> </header>
+        <p>901.968.559-8</p> 
+    </header>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('ventas')">VENTAS</button>
         <button class="tab-btn" onclick="openTab('gastos')">GASTOS</button>
-        <button class="tab-btn" onclick="openTab('productos')">MENÚ / INVENTARIO</button>
+        <button class="tab-btn" onclick="openTab('menu')">MENÚ</button>
     </div>
 
     <div class="container">
@@ -29,11 +29,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Cliente</label>
-                        <input type="text" id="venta-cliente" required placeholder="Nombre Completo">
+                        <input type="text" id="venta-cliente" required placeholder="Nombre Cliente">
                     </div>
                     <div class="form-group">
                         <label>Producto</label>
-                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar..." onchange="autocompletarPrecio()">
+                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar plato..." onchange="autocompletarPrecio()">
                         <datalist id="lista-productos"></datalist>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
             <form id="gastos-form">
                 <div class="form-group">
                     <label>Proveedor</label>
-                    <input type="text" id="gasto-proveedor" required placeholder="Empresa o Persona">
+                    <input type="text" id="gasto-proveedor" required placeholder="A quién se le paga">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -90,21 +90,22 @@
             </form>
         </div>
 
-        <div id="productos" class="tab-content">
-            <form id="productos-form">
+        <div id="menu" class="tab-content">
+            <h3 style="margin-top:0; color:#2b38a3;">Agregar Nuevo Ítem</h3>
+            <form id="menu-form">
                 <div class="form-group">
                     <label>Código</label>
-                    <input type="text" id="prod-codigo" required placeholder="Ej: REF-001">
+                    <input type="text" id="prod-codigo" required placeholder="Ej: HAM-01">
                 </div>
                 <div class="form-group">
                     <label>Descripción</label>
-                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Producto">
+                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Plato / Bebida">
                 </div>
                 <div class="form-group">
                     <label>Precio ($)</label>
                     <input type="number" id="prod-precio" required placeholder="0">
                 </div>
-                <button type="submit" class="btn-submit" style="background-color: #ef6c00;">GUARDAR PRODUCTO</button>
+                <button type="submit" class="btn-submit" style="background-color: #ef6c00;">GUARDAR EN MENÚ</button>
             </form>
         </div>
 
