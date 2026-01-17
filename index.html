@@ -23,7 +23,7 @@
         .tab-content.active { display: block; }
 
         .form-group { margin-bottom: 20px; }
-        .form-row { display: flex; gap: 15px; }
+        .form-row { display: flex; gap: 15px; align-items: flex-end; } /* Alineado abajo para el botón agregar */
         .form-row .form-group { flex: 1; }
         label { display: block; margin-bottom: 8px; color: #444; font-weight: 700; font-size: 12px; text-transform: uppercase; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; font-family: inherit; background-color: #fff; }
@@ -35,19 +35,30 @@
         .btn-gasto:hover { background-color: #b71c1c; }
         .btn-menu { background-color: #f57c00; }
         .btn-menu:hover { background-color: #e65100; }
+        
+        /* BOTÓN AGREGAR (Verde) */
+        .btn-add { background-color: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; height: 45px; width: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .btn-add:hover { background-color: #218838; }
+
+        /* ESTILOS CARRITO Y TABLAS */
+        .cart-wrapper { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee; }
+        .cart-title { font-weight: 800; color: #444; margin-bottom: 10px; text-transform: uppercase; font-size: 13px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background-color: #2b38a3; color: white; padding: 8px; text-align: left; font-weight: 600; }
+        td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
+        .col-accion { width: 30px; text-align: center; }
+        .btn-delete { color: #c62828; cursor: pointer; font-weight: bold; border: none; background: none; font-size: 16px; }
+        
+        .total-display { text-align: right; font-size: 20px; font-weight: 900; color: #2b38a3; margin-top: 15px; padding-top: 10px; border-top: 2px solid #2b38a3; }
+
+        .menu-list-wrapper { margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px; }
+        .table-responsive { max-height: 250px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
+        
         #status-message { text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px; }
 
-        /* ESTILOS NUEVOS PARA LA TABLA DE MENÚ */
-        .menu-list-wrapper { margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px; }
-        .menu-list-title { font-weight: 800; color: #2b38a3; margin-bottom: 10px; text-transform: uppercase; font-size: 14px; }
-        .table-responsive { max-height: 300px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th { background-color: #2b38a3; color: white; padding: 10px; text-align: left; font-weight: 600; position: sticky; top: 0; }
-        td { padding: 10px; border-bottom: 1px solid #eee; color: #555; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } header h1 { font-size: 32px; } }
+        @media (max-width: 600px) { .form-row { flex-direction: column; gap: 10px; align-items: stretch; } header h1 { font-size: 32px; } }
     </style>
 </head>
 <body>
@@ -69,25 +80,51 @@
 
         <div id="ventas" class="tab-content active">
             <form id="ventas-form">
-                <div class="form-group"><label>Fecha de Venta</label><input type="date" id="venta-fecha" required></div>
-                <div class="form-group"><label>Cliente</label><input type="text" id="venta-cliente" required placeholder="Nombre del cliente"></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Seleccionar Producto (CÓDIGO)</label>
-                        <select id="venta-producto" required onchange="autocompletarPrecio()">
-                            <option value="" data-precio="0">Cargando listado...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Valor ($)</label>
-                        <input type="number" id="venta-valor" required placeholder="0">
+                    <div class="form-group"><label>Fecha</label><input type="date" id="venta-fecha" required></div>
+                    <div class="form-group"><label>Cliente</label><input type="text" id="venta-cliente" required placeholder="Nombre cliente"></div>
+                </div>
+
+                <div style="background: #fff; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <label style="color: #2b38a3; margin-bottom: 10px;">AGREGAR PRODUCTO AL CARRITO:</label>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 3;">
+                            <label>Producto</label>
+                            <select id="venta-producto" onchange="autocompletarPrecio()">
+                                <option value="" data-precio="0">Cargando...</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 2;">
+                            <label>Valor ($)</label>
+                            <input type="number" id="venta-valor" placeholder="0">
+                        </div>
+                        <button type="button" class="btn-add" onclick="agregarAlCarrito()">+</button>
                     </div>
                 </div>
-                <div class="form-group"><label>Medio de Pago</label>
+
+                <div class="cart-wrapper" id="cart-container" style="display:none;">
+                    <div class="cart-title">Productos en la Venta</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th style="text-align: right;">Valor</th>
+                                <th class="col-accion"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-body">
+                            </tbody>
+                    </table>
+                    <div class="total-display" id="total-text">Total: $0</div>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Medio de Pago</label>
                     <select id="venta-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
                 </div>
-                <div class="form-group"><label>Observación</label><textarea id="venta-observacion" rows="2" placeholder="Opcional"></textarea></div>
-                <button type="submit" class="btn-submit">Registrar Venta</button>
+                <div class="form-group"><label>Observación</label><textarea id="venta-observacion" rows="1" placeholder="Opcional"></textarea></div>
+
+                <button type="submit" class="btn-submit">FINALIZAR VENTA</button>
             </form>
         </div>
 
@@ -106,30 +143,22 @@
         </div>
 
         <div id="menu" class="tab-content">
-            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">NUEVO ÍTEM AL INVENTARIO</div>
+            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">NUEVO ÍTEM</div>
             <form id="menu-form">
                 <div class="form-row">
                     <div class="form-group"><label>Código</label><input type="text" id="prod-codigo" required placeholder="Ej: P01"></div>
                     <div class="form-group"><label>Precio ($)</label><input type="number" id="prod-precio" required placeholder="0"></div>
                 </div>
-                <div class="form-group"><label>Descripción</label><input type="text" id="prod-descripcion" required placeholder="Nombre del plato/producto"></div>
+                <div class="form-group"><label>Descripción</label><input type="text" id="prod-descripcion" required placeholder="Nombre"></div>
                 <button type="submit" class="btn-submit btn-menu">Guardar en Menú</button>
             </form>
 
             <div class="menu-list-wrapper">
-                <div class="menu-list-title">Productos Existentes</div>
+                <div class="cart-title">INVENTARIO ACTUAL</div>
                 <div class="table-responsive">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Cód</th>
-                                <th>Descripción</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="menu-table-body">
-                            <tr><td colspan="3" style="text-align:center;">Cargando...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Cód</th><th>Descripción</th><th>Valor</th></tr></thead>
+                        <tbody id="menu-table-body"><tr><td colspan="3">Cargando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -139,11 +168,14 @@
     </div>
 
     <script>
-        // URL DE APPS SCRIPT
+        // URL DE LA API
         const API_URL = "https://script.google.com/macros/s/AKfycbz2Q6M-Ydh32BjZ5siIYx42q-Wi_78FbZ-mNwH0tolivDXtZW4qe4O5SPB5b7tQOviE/exec";
 
+        // Variables Globales
         document.getElementById('venta-fecha').valueAsDate = new Date();
+        let carrito = []; // Aquí guardaremos los productos antes de enviar
 
+        // 1. NAVEGACIÓN
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -155,32 +187,86 @@
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
+        // 2. LOGICA DEL CARRITO DE COMPRAS
+        function agregarAlCarrito() {
+            const select = document.getElementById('venta-producto');
+            const valorInput = document.getElementById('venta-valor');
+            
+            const productoNombre = select.value;
+            const productoValor = parseFloat(valorInput.value);
+
+            // Validaciones
+            if (!productoNombre) { alert("Selecciona un producto"); return; }
+            if (!productoValor || productoValor <= 0) { alert("Ingresa un valor válido"); return; }
+
+            // Agregar al arreglo
+            carrito.push({
+                producto: productoNombre,
+                valor: productoValor
+            });
+
+            // Limpiar campos de producto (pero no el cliente/fecha)
+            select.value = "";
+            valorInput.value = "";
+
+            renderizarCarrito();
+        }
+
+        function renderizarCarrito() {
+            const tbody = document.getElementById('cart-body');
+            const container = document.getElementById('cart-container');
+            const totalText = document.getElementById('total-text');
+            
+            tbody.innerHTML = "";
+            let total = 0;
+
+            if (carrito.length > 0) {
+                container.style.display = "block";
+                carrito.forEach((item, index) => {
+                    total += item.valor;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.producto}</td>
+                        <td style="text-align: right;">$${item.valor}</td>
+                        <td class="col-accion"><button type="button" class="btn-delete" onclick="eliminarDelCarrito(${index})">×</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                container.style.display = "none";
+            }
+            
+            totalText.textContent = "Total: $" + total;
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            renderizarCarrito();
+        }
+
+        // 3. CARGAR MENÚ
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
                 const data = await response.json();
                 
-                // 1. LLENAR SELECTOR DE VENTAS
                 const select = document.getElementById('venta-producto');
-                select.innerHTML = '<option value="" data-precio="0">-- Seleccione --</option>'; 
-
-                // 2. LLENAR TABLA DE MENÚ
                 const tableBody = document.getElementById('menu-table-body');
-                tableBody.innerHTML = ''; // Limpiar tabla
+                
+                select.innerHTML = '<option value="" data-precio="0">-- Seleccione --</option>'; 
+                tableBody.innerHTML = '';
 
                 if(data.length === 0) {
-                    select.innerHTML = '<option value="" data-precio="0">Menú vacío</option>';
-                    tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Sin productos</td></tr>';
+                    select.innerHTML = '<option value="">Menú vacío</option>';
+                    tableBody.innerHTML = '<tr><td colspan="3">Sin datos</td></tr>';
                 }
 
                 data.forEach(item => {
-                    // Limpieza de precio para lógica
+                    // Limpieza precio
                     let precioLimpio = item.precio;
-                    if (typeof precioLimpio === 'string') {
-                        precioLimpio = precioLimpio.replace(/[^\d]/g, '');
-                    }
+                    if (typeof precioLimpio === 'string') precioLimpio = precioLimpio.replace(/[^\d]/g, '');
 
-                    // A) Agregar al Select de Ventas
+                    // Select Ventas
                     const option = document.createElement('option');
                     const textoVisible = `${item.codigo} - ${item.descripcion}`;
                     option.value = textoVisible; 
@@ -188,80 +274,85 @@
                     option.dataset.precio = precioLimpio || 0; 
                     select.appendChild(option);
 
-                    // B) Agregar a la Tabla de Menú
+                    // Tabla Menú
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${item.codigo}</strong></td>
-                        <td>${item.descripcion}</td>
-                        <td>$${precioLimpio}</td>
-                    `;
+                    row.innerHTML = `<td><strong>${item.codigo}</strong></td><td>${item.descripcion}</td><td>$${precioLimpio}</td>`;
                     tableBody.appendChild(row);
                 });
-                console.log("Menú cargado en selector y tabla");
             } catch (error) {
-                console.error("Error al cargar menú:", error);
-                document.getElementById('venta-producto').innerHTML = '<option>Error cargando</option>';
+                console.error(error);
+                document.getElementById('venta-producto').innerHTML = '<option>Error API</option>';
             }
         }
 
+        // 4. ENVIO DE DATOS (PROCESAR CARRITO)
         async function enviarDatos(datos) {
-            const statusDiv = document.getElementById('status-message');
-            statusDiv.textContent = 'Guardando...';
-            statusDiv.style.color = '#2b38a3';
             try {
                 const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(datos) });
                 const result = await response.json();
-                if(result.status === "success") {
-                    statusDiv.textContent = '¡REGISTRO EXITOSO!';
-                    statusDiv.style.color = 'green';
-                    setTimeout(() => statusDiv.textContent = '', 3000);
-                    return true;
-                } else { throw new Error(result.message); }
-            } catch (error) {
-                statusDiv.textContent = 'Error: ' + error.message;
-                statusDiv.style.color = 'red';
-                return false;
-            }
-        }
-
-        function autocompletarPrecio() {
-            const select = document.getElementById('venta-producto');
-            const selectedOption = select.options[select.selectedIndex];
-            const precio = selectedOption.dataset.precio;
-            
-            const inputPrecio = document.getElementById('venta-valor');
-            if(precio && precio !== "0") {
-                inputPrecio.value = precio;
-                inputPrecio.style.backgroundColor = "#e3f2fd";
-                setTimeout(() => inputPrecio.style.backgroundColor = "white", 500);
-            } else {
-                inputPrecio.value = 0;
-            }
+                return result.status === "success";
+            } catch (error) { return false; }
         }
 
         // LISTENERS
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (carrito.length === 0) {
+                alert("¡El carrito está vacío! Agrega productos con el botón (+)");
+                return;
+            }
+
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = 'Guardando venta...';
+            statusDiv.style.color = '#2b38a3';
+
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
-            const datos = {
-                action: "guardarVenta",
-                dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
-                cliente: document.getElementById('venta-cliente').value,
-                producto: document.getElementById('venta-producto').value, 
-                valor: document.getElementById('venta-valor').value,
-                pago: document.getElementById('venta-pago').value,
-                observacion: document.getElementById('venta-observacion').value
-            };
-            if(await enviarDatos(datos)) {
-                document.getElementById('ventas-form').reset();
-                document.getElementById('venta-fecha').valueAsDate = new Date(); 
-                cargarMenu();
+            const cliente = document.getElementById('venta-cliente').value;
+            const pago = document.getElementById('venta-pago').value;
+            const obs = document.getElementById('venta-observacion').value;
+
+            // ENVIAR CADA PRODUCTO DEL CARRITO UNO POR UNO
+            // (Para mantener compatibilidad con tu hoja de cálculo actual)
+            let errores = 0;
+            
+            for (const item of carrito) {
+                const datos = {
+                    action: "guardarVenta",
+                    dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
+                    cliente: cliente,
+                    producto: item.producto, 
+                    valor: item.valor,
+                    pago: pago,
+                    observacion: obs
+                };
+                
+                const exito = await enviarDatos(datos);
+                if (!exito) errores++;
+            }
+
+            if (errores === 0) {
+                statusDiv.textContent = '¡VENTA REGISTRADA!';
+                statusDiv.style.color = 'green';
+                
+                // Resetear todo
+                carrito = [];
+                renderizarCarrito();
+                document.getElementById('venta-cliente').value = "";
+                document.getElementById('venta-observacion').value = "";
+                document.getElementById('venta-fecha').valueAsDate = new Date();
+                
+                setTimeout(() => statusDiv.textContent = '', 3000);
+            } else {
+                statusDiv.textContent = 'Hubo errores al guardar algunos productos.';
+                statusDiv.style.color = 'red';
             }
         });
 
         document.getElementById('gastos-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            document.getElementById('status-message').textContent = "Guardando gasto...";
             const datos = {
                 action: "guardarGasto",
                 proveedor: document.getElementById('gasto-proveedor').value,
@@ -269,11 +360,16 @@
                 pago: document.getElementById('gasto-pago').value,
                 observacion: document.getElementById('gasto-observacion').value
             };
-            if(await enviarDatos(datos)) document.getElementById('gastos-form').reset();
+            if(await enviarDatos(datos)) {
+                document.getElementById('gastos-form').reset();
+                document.getElementById('status-message').textContent = "¡Gasto Guardado!";
+                setTimeout(() => document.getElementById('status-message').textContent = '', 2000);
+            }
         });
 
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            document.getElementById('status-message').textContent = "Guardando producto...";
             const datos = {
                 action: "guardarProducto",
                 codigo: document.getElementById('prod-codigo').value,
@@ -282,10 +378,22 @@
             };
             if(await enviarDatos(datos)) {
                 document.getElementById('menu-form').reset();
-                // Recargar el menú para que aparezca en la tabla y en ventas inmediatamente
+                document.getElementById('status-message').textContent = "¡Producto Creado!";
+                setTimeout(() => document.getElementById('status-message').textContent = '', 2000);
                 setTimeout(cargarMenu, 1000); 
             }
         });
+
+        function autocompletarPrecio() {
+            const select = document.getElementById('venta-producto');
+            const precio = select.options[select.selectedIndex].dataset.precio;
+            const inputVal = document.getElementById('venta-valor');
+            if(precio && precio !== "0") {
+                inputVal.value = precio;
+                inputVal.style.backgroundColor = "#e3f2fd";
+                setTimeout(() => inputVal.style.backgroundColor = "white", 500);
+            } else { inputVal.value = 0; }
+        }
 
         cargarMenu();
     </script>
