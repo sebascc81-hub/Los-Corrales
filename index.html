@@ -5,156 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Los Corrales - Gestión</title>
     <style>
-        /* =========================================
-           DISEÑO VISUAL (ESTILO MONTECLARO)
-           ========================================= */
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+        /* ESTILO VISUAL (MONTECLARO) */
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
+        
+        header { background-color: #2b38a3; color: white; text-align: center; padding: 35px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+        header h1 { font-size: 42px; font-weight: 900; margin: 0; letter-spacing: -1px; text-transform: uppercase; }
+        header h2 { font-size: 16px; font-weight: 700; margin: 10px 0 0 0; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; }
 
-        header {
-            background-color: #2b38a3;
-            color: white;
-            text-align: center;
-            padding: 35px 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-        }
-
-        header h1 {
-            font-size: 42px;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-        }
-
-        header h2 {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 10px 0 0 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.9;
-        }
-
-        .tabs-container {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            color: #555;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 15px 0;
-            cursor: pointer;
-            border-bottom: 4px solid transparent;
-            transition: 0.3s;
-        }
-
+        .tabs-container { background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .tabs { display: flex; justify-content: center; max-width: 600px; margin: 0 auto; }
+        .tab-btn { flex: 1; background: none; border: none; color: #555; font-size: 14px; font-weight: 700; text-transform: uppercase; padding: 15px 0; cursor: pointer; border-bottom: 4px solid transparent; transition: 0.3s; }
         .tab-btn:hover { color: #2b38a3; background-color: #fcfcfc; }
         .tab-btn.active { color: #2b38a3; border-bottom: 4px solid #2b38a3; }
 
-        .main-container {
-            max-width: 500px;
-            margin: 0 auto 50px auto;
-            padding: 0 20px;
-        }
-
-        .tab-content {
-            display: none;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
+        .main-container { max-width: 500px; margin: 0 auto 50px auto; padding: 0 20px; }
+        .tab-content { display: none; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
 
         .form-group { margin-bottom: 20px; }
         .form-row { display: flex; gap: 15px; }
         .form-row .form-group { flex: 1; }
+        label { display: block; margin-bottom: 8px; color: #444; font-weight: 700; font-size: 12px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; font-family: inherit; background-color: #fff; }
+        input:focus, select:focus { outline: none; border-color: #2b38a3; background-color: #f8fbff; }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #444;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        /* Estilo para Inputs y el Select Desplegable */
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-            font-family: inherit;
-            background-color: #fff;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #2b38a3;
-            background-color: #f8fbff;
-        }
-
-        /* Botones */
-        .btn-submit {
-            width: 100%;
-            background-color: #2b38a3;
-            color: white;
-            border: none;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 800;
-            border-radius: 6px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 10px;
-            transition: background 0.3s;
-        }
+        .btn-submit { width: 100%; background-color: #2b38a3; color: white; border: none; padding: 16px; font-size: 16px; font-weight: 800; border-radius: 6px; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: background 0.3s; }
         .btn-submit:hover { background-color: #1a237e; }
-        
         .btn-gasto { background-color: #c62828; }
         .btn-gasto:hover { background-color: #b71c1c; }
-
         .btn-menu { background-color: #f57c00; }
         .btn-menu:hover { background-color: #e65100; }
-
-        #status-message {
-            text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
-            min-height: 24px;
-        }
+        #status-message { text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 600px) { 
-            .form-row { flex-direction: column; gap: 0; }
-            header h1 { font-size: 32px; }
-        }
+        @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } header h1 { font-size: 32px; } }
     </style>
 </head>
 <body>
@@ -176,17 +60,8 @@
 
         <div id="ventas" class="tab-content active">
             <form id="ventas-form">
-                
-                <div class="form-group">
-                    <label>Fecha de Venta</label>
-                    <input type="date" id="venta-fecha" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Cliente</label>
-                    <input type="text" id="venta-cliente" required placeholder="Nombre del cliente">
-                </div>
-
+                <div class="form-group"><label>Fecha de Venta</label><input type="date" id="venta-fecha" required></div>
+                <div class="form-group"><label>Cliente</label><input type="text" id="venta-cliente" required placeholder="Nombre del cliente"></div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Seleccionar Producto (CÓDIGO)</label>
@@ -199,74 +74,36 @@
                         <input type="number" id="venta-valor" required placeholder="0">
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Medio de Pago</label>
-                    <select id="venta-pago">
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia">Transferencia</option>
-                    </select>
+                <div class="form-group"><label>Medio de Pago</label>
+                    <select id="venta-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
                 </div>
-
-                <div class="form-group">
-                    <label>Observación</label>
-                    <textarea id="venta-observacion" rows="2" placeholder="Opcional"></textarea>
-                </div>
-
+                <div class="form-group"><label>Observación</label><textarea id="venta-observacion" rows="2" placeholder="Opcional"></textarea></div>
                 <button type="submit" class="btn-submit">Registrar Venta</button>
             </form>
         </div>
 
         <div id="gastos" class="tab-content">
             <form id="gastos-form">
-                <div class="form-group">
-                    <label>Proveedor</label>
-                    <input type="text" id="gasto-proveedor" required placeholder="A quién se paga">
-                </div>
-
+                <div class="form-group"><label>Proveedor</label><input type="text" id="gasto-proveedor" required placeholder="A quién se paga"></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Valor ($)</label>
-                        <input type="number" id="gasto-valor" required placeholder="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Pago</label>
-                        <select id="gasto-pago">
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Transferencia">Transferencia</option>
-                        </select>
+                    <div class="form-group"><label>Valor ($)</label><input type="number" id="gasto-valor" required placeholder="0"></div>
+                    <div class="form-group"><label>Pago</label>
+                        <select id="gasto-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Detalle</label>
-                    <textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea>
-                </div>
-
+                <div class="form-group"><label>Detalle</label><textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea></div>
                 <button type="submit" class="btn-submit btn-gasto">Registrar Gasto</button>
             </form>
         </div>
 
         <div id="menu" class="tab-content">
-            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">
-                NUEVO ÍTEM AL INVENTARIO
-            </div>
+            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">NUEVO ÍTEM AL INVENTARIO</div>
             <form id="menu-form">
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Código</label>
-                        <input type="text" id="prod-codigo" required placeholder="Ej: P01">
-                    </div>
-                    <div class="form-group">
-                        <label>Precio ($)</label>
-                        <input type="number" id="prod-precio" required placeholder="0">
-                    </div>
+                    <div class="form-group"><label>Código</label><input type="text" id="prod-codigo" required placeholder="Ej: P01"></div>
+                    <div class="form-group"><label>Precio ($)</label><input type="number" id="prod-precio" required placeholder="0"></div>
                 </div>
-                <div class="form-group">
-                    <label>Descripción</label>
-                    <input type="text" id="prod-descripcion" required placeholder="Nombre del plato/producto">
-                </div>
-
+                <div class="form-group"><label>Descripción</label><input type="text" id="prod-descripcion" required placeholder="Nombre del plato/producto"></div>
                 <button type="submit" class="btn-submit btn-menu">Guardar en Menú</button>
             </form>
         </div>
@@ -275,82 +112,72 @@
     </div>
 
     <script>
-        // URL ACTUALIZADA
+        // TU URL ACTUAL (Copiada del mensaje anterior)
         const API_URL = "https://script.google.com/macros/s/AKfycbz2Q6M-Ydh32BjZ5siIYx42q-Wi_78FbZ-mNwH0tolivDXtZW4qe4O5SPB5b7tQOviE/exec";
 
-        // Fecha de hoy por defecto
         document.getElementById('venta-fecha').valueAsDate = new Date();
 
-        // 1. PESTAÑAS
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
             document.getElementById(tabName).classList.add('active');
-            
             const buttons = document.querySelectorAll('.tab-btn');
             if(tabName === 'ventas') buttons[0].classList.add('active');
             if(tabName === 'gastos') buttons[1].classList.add('active');
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // 2. CARGAR MENÚ CON PRECIO OCULTO
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
                 const data = await response.json();
                 
                 const select = document.getElementById('venta-producto');
-                // Limpiar lista y poner opción por defecto
-                select.innerHTML = '<option value="" data-precio="0">-- Seleccione un producto --</option>'; 
+                select.innerHTML = '<option value="" data-precio="0">-- Seleccione --</option>'; 
 
                 if(data.length === 0) {
-                    select.innerHTML = '<option value="" data-precio="0">No hay productos en el Menú</option>';
+                    select.innerHTML = '<option value="" data-precio="0">Menú vacío</option>';
                 }
 
                 data.forEach(item => {
                     const option = document.createElement('option');
-                    
-                    // Texto que se ve en la lista: "CÓDIGO - DESCRIPCIÓN"
+                    // Texto: CÓDIGO - DESCRIPCIÓN
                     const textoVisible = `${item.codigo} - ${item.descripcion}`;
-                    
                     option.value = textoVisible; 
                     option.text = textoVisible;
                     
-                    // Guardamos el precio en el atributo data-precio
-                    option.dataset.precio = item.precio; 
+                    // LIMPIEZA DE PRECIO (El arreglo clave)
+                    let precioLimpio = item.precio;
+                    if (typeof precioLimpio === 'string') {
+                        // Elimina cualquier cosa que no sea número (quita $ , .)
+                        precioLimpio = precioLimpio.replace(/[^\d]/g, '');
+                    }
+                    
+                    // Guarda el precio limpio en el atributo oculto
+                    option.dataset.precio = precioLimpio || 0; 
                     
                     select.appendChild(option);
                 });
-                console.log("Lista desplegable actualizada con precios.");
+                console.log("Menú cargado OK");
             } catch (error) {
                 console.error("Error al cargar menú:", error);
-                document.getElementById('venta-producto').innerHTML = '<option>Error cargando menú</option>';
+                document.getElementById('venta-producto').innerHTML = '<option>Error cargando menú (Verificar API)</option>';
             }
         }
 
-        // 3. ENVIAR DATOS
         async function enviarDatos(datos) {
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = 'Guardando...';
             statusDiv.style.color = '#2b38a3';
-
             try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify(datos)
-                });
-                
+                const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(datos) });
                 const result = await response.json();
-                
                 if(result.status === "success") {
                     statusDiv.textContent = '¡REGISTRO EXITOSO!';
                     statusDiv.style.color = 'green';
                     setTimeout(() => statusDiv.textContent = '', 3000);
                     return true;
-                } else {
-                    throw new Error(result.message);
-                }
+                } else { throw new Error(result.message); }
             } catch (error) {
                 statusDiv.textContent = 'Error: ' + error.message;
                 statusDiv.style.color = 'red';
@@ -358,45 +185,37 @@
             }
         }
 
-        // 4. PRECIO AUTOMÁTICO
         function autocompletarPrecio() {
             const select = document.getElementById('venta-producto');
-            // Buscamos la opción seleccionada actualmente
             const selectedOption = select.options[select.selectedIndex];
             
-            // Leemos el precio que guardamos en "data-precio"
+            // Obtener el precio limpio que guardamos
             const precio = selectedOption.dataset.precio;
             
-            if(precio) {
-                const inputPrecio = document.getElementById('venta-valor');
+            const inputPrecio = document.getElementById('venta-valor');
+            if(precio && precio !== "0") {
                 inputPrecio.value = precio;
-                
-                // Efecto visual
                 inputPrecio.style.backgroundColor = "#e3f2fd";
                 setTimeout(() => inputPrecio.style.backgroundColor = "white", 500);
+            } else {
+                inputPrecio.value = 0;
             }
         }
 
-        // --- LISTENERS ---
-
+        // LISTENERS
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
-
             const datos = {
                 action: "guardarVenta",
-                dia: fechaObj.getDate(),
-                mes: fechaObj.getMonth() + 1,
-                anio: fechaObj.getFullYear(),
+                dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
                 cliente: document.getElementById('venta-cliente').value,
                 producto: document.getElementById('venta-producto').value, 
                 valor: document.getElementById('venta-valor').value,
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value
             };
-            
             if(await enviarDatos(datos)) {
                 document.getElementById('ventas-form').reset();
                 document.getElementById('venta-fecha').valueAsDate = new Date(); 
@@ -430,9 +249,7 @@
             }
         });
 
-        // Iniciar
         cargarMenu();
-
     </script>
 </body>
 </html>
