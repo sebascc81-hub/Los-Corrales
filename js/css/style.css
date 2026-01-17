@@ -1,0 +1,17 @@
+body { font-family: sans-serif; background: #f4f6f8; display: flex; justify-content: center; padding: 20px; }
+.container { background: white; width: 100%; max-width: 500px; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+h1 { margin: 0; color: #333; }
+.tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #eee; padding: 5px; border-radius: 5px; }
+.tab-btn { flex: 1; border: none; background: none; padding: 10px; cursor: pointer; font-weight: bold; color: #666; }
+.tab-btn.active { background: white; color: #007bff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.form-group { margin-bottom: 15px; }
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
+label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+.btn-submit { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+.btn-submit:hover { opacity: 0.9; }
+#status-message { text-align: center; margin-top: 15px; font-weight: bold; min-height: 20px; }
