@@ -13,8 +13,8 @@
         header h2 { font-size: 16px; font-weight: 700; margin: 10px 0 0 0; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; }
 
         .tabs-container { background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        .tabs { display: flex; justify-content: center; max-width: 600px; margin: 0 auto; }
-        .tab-btn { flex: 1; background: none; border: none; color: #555; font-size: 14px; font-weight: 700; text-transform: uppercase; padding: 15px 0; cursor: pointer; border-bottom: 4px solid transparent; transition: 0.3s; }
+        .tabs { display: flex; justify-content: center; max-width: 600px; margin: 0 auto; flex-wrap: wrap; }
+        .tab-btn { flex: 1; background: none; border: none; color: #555; font-size: 13px; font-weight: 700; text-transform: uppercase; padding: 15px 5px; cursor: pointer; border-bottom: 4px solid transparent; transition: 0.3s; min-width: 80px; }
         .tab-btn:hover { color: #2b38a3; background-color: #fcfcfc; }
         .tab-btn.active { color: #2b38a3; border-bottom: 4px solid #2b38a3; }
 
@@ -36,15 +36,14 @@
         .btn-menu { background-color: #f57c00; }
         .btn-menu:hover { background-color: #e65100; }
         
-        /* BOTÓN AGREGAR (Verde) */
         .btn-add { background-color: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; height: 45px; width: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .btn-add:hover { background-color: #218838; }
 
-        /* CARRITO Y TABLAS */
-        .cart-wrapper { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee; }
+        /* TABLAS Y LISTAS */
+        .cart-wrapper, .report-wrapper { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee; }
         .cart-title { font-weight: 800; color: #444; margin-bottom: 10px; text-transform: uppercase; font-size: 13px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th { background-color: #2b38a3; color: white; padding: 8px; text-align: left; font-weight: 600; }
         td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
         .col-accion { width: 30px; text-align: center; }
@@ -71,6 +70,7 @@
             <button class="tab-btn active" onclick="openTab('ventas')">Ventas</button>
             <button class="tab-btn" onclick="openTab('gastos')">Gastos</button>
             <button class="tab-btn" onclick="openTab('menu')">Menú</button>
+            <button class="tab-btn" onclick="openTab('reportes')" style="color:#2b38a3;">📊 Reportes</button>
         </div>
     </div>
 
@@ -82,9 +82,9 @@
                     <div class="form-group"><label>Fecha</label><input type="date" id="venta-fecha" required></div>
                     <div class="form-group"><label>Cliente</label><input type="text" id="venta-cliente" required placeholder="Nombre cliente"></div>
                 </div>
-
+                
                 <div style="background: #fff; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <label style="color: #2b38a3; margin-bottom: 10px;">AGREGAR PRODUCTO AL CARRITO:</label>
+                    <label style="color: #2b38a3; margin-bottom: 10px;">AGREGAR PRODUCTO:</label>
                     <div class="form-row">
                         <div class="form-group" style="flex: 3;">
                             <label>Producto</label>
@@ -102,16 +102,7 @@
 
                 <div class="cart-wrapper" id="cart-container" style="display:none;">
                     <div class="cart-title">Productos en la Venta</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th style="text-align: right;">Valor</th>
-                                <th class="col-accion"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="cart-body"></tbody>
-                    </table>
+                    <table><thead><tr><th>Producto</th><th style="text-align: right;">Valor</th><th class="col-accion"></th></tr></thead><tbody id="cart-body"></tbody></table>
                     <div class="total-display" id="total-text">Total: $0</div>
                 </div>
 
@@ -120,7 +111,6 @@
                     <select id="venta-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
                 </div>
                 <div class="form-group"><label>Observación</label><textarea id="venta-observacion" rows="1" placeholder="Opcional"></textarea></div>
-
                 <button type="submit" class="btn-submit">FINALIZAR VENTA</button>
             </form>
         </div>
@@ -130,9 +120,7 @@
                 <div class="form-group"><label>Proveedor</label><input type="text" id="gasto-proveedor" required placeholder="A quién se paga"></div>
                 <div class="form-row">
                     <div class="form-group"><label>Valor ($)</label><input type="number" id="gasto-valor" required placeholder="0"></div>
-                    <div class="form-group"><label>Pago</label>
-                        <select id="gasto-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
-                    </div>
+                    <div class="form-group"><label>Pago</label><select id="gasto-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select></div>
                 </div>
                 <div class="form-group"><label>Detalle</label><textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea></div>
                 <button type="submit" class="btn-submit btn-gasto">Registrar Gasto</button>
@@ -149,6 +137,7 @@
                 <div class="form-group"><label>Descripción</label><input type="text" id="prod-descripcion" required placeholder="Nombre"></div>
                 <button type="submit" class="btn-submit btn-menu">Guardar en Menú</button>
             </form>
+            
             <div class="menu-list-wrapper">
                 <div class="cart-title">INVENTARIO ACTUAL</div>
                 <div class="table-responsive">
@@ -157,27 +146,61 @@
             </div>
         </div>
 
+        <div id="reportes" class="tab-content">
+            <div style="text-align: center; margin-bottom: 20px; color: #2b38a3; font-weight: bold;">FILTRAR MOVIMIENTOS</div>
+            <form id="reporte-form" onsubmit="generarReporte(event)">
+                <div class="form-group">
+                    <label>Tipo de Movimiento</label>
+                    <select id="rep-tipo">
+                        <option value="VENTAS">VER VENTAS</option>
+                        <option value="GASTOS">VER GASTOS</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Desde</label><input type="date" id="rep-inicio" required></div>
+                    <div class="form-group"><label>Hasta</label><input type="date" id="rep-fin" required></div>
+                </div>
+                <button type="submit" class="btn-submit" style="background-color: #555;">BUSCAR</button>
+            </form>
+
+            <div id="report-result" class="report-wrapper" style="display:none;">
+                <div class="cart-title" id="rep-titulo-tabla">Resultados</div>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Fecha</th><th>Descripción</th><th style="text-align:right">Valor</th></tr></thead>
+                        <tbody id="rep-body"></tbody>
+                    </table>
+                </div>
+                <div class="total-display" id="rep-total">Total: $0</div>
+            </div>
+        </div>
+
         <div id="status-message"></div>
     </div>
 
     <script>
         // TU NUEVA URL CONFIGURADA:
-        const API_URL = "https://script.google.com/macros/s/AKfycbwfAcGh4ktqc50a8uAvVA70gjX-KqKinB6iUHL4s8AiHa8hpD5FX-3t0O9EOJrv13IEEw/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec";
 
         document.getElementById('venta-fecha').valueAsDate = new Date();
+        document.getElementById('rep-inicio').valueAsDate = new Date();
+        document.getElementById('rep-fin').valueAsDate = new Date();
+        
         let carrito = [];
 
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            const buttons = document.querySelectorAll('.tab-btn');
-            if(tabName === 'ventas') buttons[0].classList.add('active');
-            if(tabName === 'gastos') buttons[1].classList.add('active');
-            if(tabName === 'menu') buttons[2].classList.add('active');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            if(tabName === 'ventas') btns[0].classList.add('active');
+            if(tabName === 'gastos') btns[1].classList.add('active');
+            if(tabName === 'menu') btns[2].classList.add('active');
+            if(tabName === 'reportes') btns[3].classList.add('active');
         }
 
-        // --- LÓGICA DEL CARRITO ---
+        // --- CARRITO ---
         function agregarAlCarrito() {
             const select = document.getElementById('venta-producto');
             const valorInput = document.getElementById('venta-valor');
@@ -197,7 +220,6 @@
             const tbody = document.getElementById('cart-body');
             const container = document.getElementById('cart-container');
             const totalText = document.getElementById('total-text');
-            
             tbody.innerHTML = "";
             let total = 0;
 
@@ -218,21 +240,15 @@
             renderizarCarrito();
         }
 
+        // --- CARGAR MENÚ ---
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
                 const data = await response.json();
-                
                 const select = document.getElementById('venta-producto');
                 const tableBody = document.getElementById('menu-table-body');
-                
                 select.innerHTML = '<option value="" data-precio="0">-- Seleccione --</option>'; 
                 tableBody.innerHTML = '';
-
-                if(data.length === 0) {
-                    select.innerHTML = '<option value="">Menú vacío</option>';
-                    tableBody.innerHTML = '<tr><td colspan="3">Sin datos</td></tr>';
-                }
 
                 data.forEach(item => {
                     let precioLimpio = item.precio;
@@ -259,19 +275,63 @@
             } catch (error) { return false; }
         }
 
-        // --- ENVIAR VENTA (CARRITO COMPLETO) ---
+        // --- GENERAR REPORTE ---
+        async function generarReporte(e) {
+            e.preventDefault();
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = "Buscando...";
+            statusDiv.style.color = "blue";
+
+            const datos = {
+                action: "filtrarRegistros",
+                tipo: document.getElementById('rep-tipo').value,
+                fechaInicio: document.getElementById('rep-inicio').value,
+                fechaFin: document.getElementById('rep-fin').value
+            };
+
+            try {
+                const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(datos) });
+                const json = await response.json();
+                
+                if (json.status === "success") {
+                    const registros = json.data;
+                    const tbody = document.getElementById('rep-body');
+                    const container = document.getElementById('report-result');
+                    const totalDisp = document.getElementById('rep-total');
+                    
+                    tbody.innerHTML = "";
+                    let total = 0;
+
+                    if (registros.length > 0) {
+                        container.style.display = "block";
+                        registros.forEach(reg => {
+                            total += parseFloat(reg.valor);
+                            const row = document.createElement('tr');
+                            row.innerHTML = `<td>${reg.fecha}</td><td>${reg.descripcion}</td><td style="text-align:right">$${reg.valor}</td>`;
+                            tbody.appendChild(row);
+                        });
+                        totalDisp.textContent = "Total: $" + total;
+                        statusDiv.textContent = "Datos cargados.";
+                        setTimeout(() => statusDiv.textContent = '', 2000);
+                    } else {
+                        container.style.display = "none";
+                        alert("No hay registros en esas fechas.");
+                        statusDiv.textContent = "";
+                    }
+                } else { alert("Error: " + json.message); }
+            } catch (error) { statusDiv.textContent = "Error conexión"; }
+        }
+
+        // --- ENVIAR FORMULARIOS ---
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (carrito.length === 0) { alert("¡El carrito está vacío!"); return; }
-
+            if (carrito.length === 0) { alert("Carrito vacío"); return; }
             const statusDiv = document.getElementById('status-message');
-            statusDiv.textContent = 'Guardando venta...';
-            statusDiv.style.color = '#2b38a3';
-
+            statusDiv.textContent = 'Enviando...';
+            
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
 
-            // Enviamos el CARRITO COMPLETO para que el backend use un solo ID de factura
             const datosVenta = {
                 action: "guardarVenta",
                 dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
@@ -281,26 +341,19 @@
                 carrito: carrito 
             };
 
-            const exito = await enviarDatos(datosVenta);
-
-            if (exito) {
-                statusDiv.textContent = '¡VENTA REGISTRADA!';
+            if (await enviarDatos(datosVenta)) {
+                statusDiv.textContent = '¡REGISTRADO!';
                 statusDiv.style.color = 'green';
                 carrito = [];
                 renderizarCarrito();
                 document.getElementById('venta-cliente').value = "";
                 document.getElementById('venta-observacion').value = "";
-                document.getElementById('venta-fecha').valueAsDate = new Date();
                 setTimeout(() => statusDiv.textContent = '', 3000);
-            } else {
-                statusDiv.textContent = 'Error al guardar.';
-                statusDiv.style.color = 'red';
             }
         });
 
         document.getElementById('gastos-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            document.getElementById('status-message').textContent = "Guardando gasto...";
             const datos = {
                 action: "guardarGasto",
                 proveedor: document.getElementById('gasto-proveedor').value,
@@ -310,14 +363,12 @@
             };
             if(await enviarDatos(datos)) {
                 document.getElementById('gastos-form').reset();
-                document.getElementById('status-message').textContent = "¡Gasto Guardado!";
-                setTimeout(() => document.getElementById('status-message').textContent = '', 2000);
+                alert("Gasto guardado");
             }
         });
 
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            document.getElementById('status-message').textContent = "Guardando producto...";
             const datos = {
                 action: "guardarProducto",
                 codigo: document.getElementById('prod-codigo').value,
@@ -326,9 +377,8 @@
             };
             if(await enviarDatos(datos)) {
                 document.getElementById('menu-form').reset();
-                document.getElementById('status-message').textContent = "¡Producto Creado!";
-                setTimeout(() => document.getElementById('status-message').textContent = '', 2000);
                 setTimeout(cargarMenu, 1000); 
+                alert("Producto creado");
             }
         });
 
