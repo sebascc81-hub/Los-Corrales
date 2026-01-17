@@ -3,96 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Los Corrales - Sistema</title>
+    <title>Los Corrales - Gestión</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
+    <header>
+        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">INMOBILIARIA</div>
+        <h1>los corrales</h1> <h2>GESTION COMERCIAL</h2>
+        
+        <p>LOS CORRALES S.A.S</p>
+        <p>901.968.559-8</p> </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('ventas')">VENTAS</button>
+        <button class="tab-btn" onclick="openTab('gastos')">GASTOS</button>
+        <button class="tab-btn" onclick="openTab('productos')">MENÚ / INVENTARIO</button>
+    </div>
+
     <div class="container">
-        <header>
-            <h1>LOS CORRALES</h1>
-            <p>Sistema de Gestión</p>
-        </header>
-
-        <div id="content">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="openTab('ventas')">Registrar Venta</button>
-                <button class="tab-btn" onclick="openTab('gastos')">Registrar Gasto</button>
-                <button class="tab-btn" onclick="openTab('productos')">Nuevo Producto</button>
-            </div>
-
-            <div id="ventas" class="tab-content active">
-                <form id="ventas-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Cliente:</label>
-                            <input type="text" id="venta-cliente" required placeholder="Nombre">
-                        </div>
-                        <div class="form-group">
-                            <label>Producto:</label>
-                            <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar..." onchange="autocompletarPrecio()">
-                            <datalist id="lista-productos"></datalist>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Valor ($):</label>
-                            <input type="number" id="venta-valor" required placeholder="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Pago:</label>
-                            <select id="venta-pago">
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Transferencia">Transferencia</option>
-                                <option value="Nequi">Nequi</option>
-                            </select>
-                        </div>
+        
+        <div id="ventas" class="tab-content active">
+            <form id="ventas-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" id="venta-cliente" required placeholder="Nombre Completo">
                     </div>
                     <div class="form-group">
-                        <textarea id="venta-observacion" rows="2" placeholder="Observación (Opcional)"></textarea>
+                        <label>Producto</label>
+                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Buscar..." onchange="autocompletarPrecio()">
+                        <datalist id="lista-productos"></datalist>
                     </div>
-                    <button type="submit" class="btn-submit">Registrar Venta</button>
-                </form>
-            </div>
+                </div>
 
-            <div id="gastos" class="tab-content">
-                <form id="gastos-form">
+                <div class="form-row">
                     <div class="form-group">
-                        <label>Proveedor:</label>
-                        <input type="text" id="gasto-proveedor" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Valor ($):</label>
-                            <input type="number" id="gasto-valor" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Pago:</label>
-                            <select id="gasto-pago">
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Transferencia">Transferencia</option>
-                                <option value="Nequi">Nequi</option>
-                            </select>
-                        </div>
+                        <label>Valor ($)</label>
+                        <input type="number" id="venta-valor" required placeholder="0">
                     </div>
                     <div class="form-group">
-                        <textarea id="gasto-observacion" rows="2" placeholder="Detalle"></textarea>
+                        <label>Medio de Pago</label>
+                        <select id="venta-pago">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Nequi">Nequi</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn-submit" style="background-color: #d9534f;">Registrar Gasto</button>
-                </form>
-            </div>
+                </div>
 
-            <div id="productos" class="tab-content">
-                <form id="productos-form">
-                    <input type="text" id="prod-codigo" required placeholder="Código (Ej: P-01)">
-                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Producto">
-                    <input type="number" id="prod-precio" required placeholder="Precio">
-                    <button type="submit" class="btn-submit" style="background-color: #f0ad4e;">Guardar Producto</button>
-                </form>
-            </div>
+                <div class="form-group">
+                    <label>Observación</label>
+                    <textarea id="venta-observacion" rows="2" placeholder="Opcional"></textarea>
+                </div>
 
-            <div id="status-message"></div>
+                <button type="submit" class="btn-submit">REGISTRAR VENTA</button>
+            </form>
         </div>
+
+        <div id="gastos" class="tab-content">
+            <form id="gastos-form">
+                <div class="form-group">
+                    <label>Proveedor</label>
+                    <input type="text" id="gasto-proveedor" required placeholder="Empresa o Persona">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Valor ($)</label>
+                        <input type="number" id="gasto-valor" required placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Pago</label>
+                        <select id="gasto-pago">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Nequi">Nequi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Detalle</label>
+                    <textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea>
+                </div>
+                <button type="submit" class="btn-submit" style="background-color: #c62828;">REGISTRAR GASTO</button>
+            </form>
+        </div>
+
+        <div id="productos" class="tab-content">
+            <form id="productos-form">
+                <div class="form-group">
+                    <label>Código</label>
+                    <input type="text" id="prod-codigo" required placeholder="Ej: REF-001">
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <input type="text" id="prod-descripcion" required placeholder="Nombre del Producto">
+                </div>
+                <div class="form-group">
+                    <label>Precio ($)</label>
+                    <input type="number" id="prod-precio" required placeholder="0">
+                </div>
+                <button type="submit" class="btn-submit" style="background-color: #ef6c00;">GUARDAR PRODUCTO</button>
+            </form>
+        </div>
+
+        <div id="status-message"></div>
     </div>
 
     <script src="js/app.js"></script>
