@@ -23,7 +23,7 @@
         .tab-content.active { display: block; }
 
         .form-group { margin-bottom: 20px; }
-        .form-row { display: flex; gap: 15px; align-items: flex-end; } /* Alineado abajo para el botón agregar */
+        .form-row { display: flex; gap: 15px; align-items: flex-end; }
         .form-row .form-group { flex: 1; }
         label { display: block; margin-bottom: 8px; color: #444; font-weight: 700; font-size: 12px; text-transform: uppercase; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; font-family: inherit; background-color: #fff; }
@@ -40,7 +40,7 @@
         .btn-add { background-color: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; height: 45px; width: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .btn-add:hover { background-color: #218838; }
 
-        /* ESTILOS CARRITO Y TABLAS */
+        /* CARRITO Y TABLAS */
         .cart-wrapper { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #eee; }
         .cart-title { font-weight: 800; color: #444; margin-bottom: 10px; text-transform: uppercase; font-size: 13px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
         
@@ -51,10 +51,8 @@
         .btn-delete { color: #c62828; cursor: pointer; font-weight: bold; border: none; background: none; font-size: 16px; }
         
         .total-display { text-align: right; font-size: 20px; font-weight: 900; color: #2b38a3; margin-top: 15px; padding-top: 10px; border-top: 2px solid #2b38a3; }
-
         .menu-list-wrapper { margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px; }
         .table-responsive { max-height: 250px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
-        
         #status-message { text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -112,8 +110,7 @@
                                 <th class="col-accion"></th>
                             </tr>
                         </thead>
-                        <tbody id="cart-body">
-                            </tbody>
+                        <tbody id="cart-body"></tbody>
                     </table>
                     <div class="total-display" id="total-text">Total: $0</div>
                 </div>
@@ -152,14 +149,10 @@
                 <div class="form-group"><label>Descripción</label><input type="text" id="prod-descripcion" required placeholder="Nombre"></div>
                 <button type="submit" class="btn-submit btn-menu">Guardar en Menú</button>
             </form>
-
             <div class="menu-list-wrapper">
                 <div class="cart-title">INVENTARIO ACTUAL</div>
                 <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Cód</th><th>Descripción</th><th>Valor</th></tr></thead>
-                        <tbody id="menu-table-body"><tr><td colspan="3">Cargando...</td></tr></tbody>
-                    </table>
+                    <table><thead><tr><th>Cód</th><th>Descripción</th><th>Valor</th></tr></thead><tbody id="menu-table-body"><tr><td colspan="3">Cargando...</td></tr></tbody></table>
                 </div>
             </div>
         </div>
@@ -168,47 +161,35 @@
     </div>
 
     <script>
-        // URL DE LA API
-        const API_URL = "https://script.google.com/macros/s/AKfycbz2Q6M-Ydh32BjZ5siIYx42q-Wi_78FbZ-mNwH0tolivDXtZW4qe4O5SPB5b7tQOviE/exec";
+        // TU NUEVA URL CONFIGURADA:
+        const API_URL = "https://script.google.com/macros/s/AKfycbwfAcGh4ktqc50a8uAvVA70gjX-KqKinB6iUHL4s8AiHa8hpD5FX-3t0O9EOJrv13IEEw/exec";
 
-        // Variables Globales
         document.getElementById('venta-fecha').valueAsDate = new Date();
-        let carrito = []; // Aquí guardaremos los productos antes de enviar
+        let carrito = [];
 
-        // 1. NAVEGACIÓN
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            
             const buttons = document.querySelectorAll('.tab-btn');
             if(tabName === 'ventas') buttons[0].classList.add('active');
             if(tabName === 'gastos') buttons[1].classList.add('active');
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // 2. LOGICA DEL CARRITO DE COMPRAS
+        // --- LÓGICA DEL CARRITO ---
         function agregarAlCarrito() {
             const select = document.getElementById('venta-producto');
             const valorInput = document.getElementById('venta-valor');
-            
             const productoNombre = select.value;
             const productoValor = parseFloat(valorInput.value);
 
-            // Validaciones
             if (!productoNombre) { alert("Selecciona un producto"); return; }
             if (!productoValor || productoValor <= 0) { alert("Ingresa un valor válido"); return; }
 
-            // Agregar al arreglo
-            carrito.push({
-                producto: productoNombre,
-                valor: productoValor
-            });
-
-            // Limpiar campos de producto (pero no el cliente/fecha)
+            carrito.push({ producto: productoNombre, valor: productoValor });
             select.value = "";
             valorInput.value = "";
-
             renderizarCarrito();
         }
 
@@ -225,17 +206,10 @@
                 carrito.forEach((item, index) => {
                     total += item.valor;
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.producto}</td>
-                        <td style="text-align: right;">$${item.valor}</td>
-                        <td class="col-accion"><button type="button" class="btn-delete" onclick="eliminarDelCarrito(${index})">×</button></td>
-                    `;
+                    row.innerHTML = `<td>${item.producto}</td><td style="text-align: right;">$${item.valor}</td><td class="col-accion"><button type="button" class="btn-delete" onclick="eliminarDelCarrito(${index})">×</button></td>`;
                     tbody.appendChild(row);
                 });
-            } else {
-                container.style.display = "none";
-            }
-            
+            } else { container.style.display = "none"; }
             totalText.textContent = "Total: $" + total;
         }
 
@@ -244,7 +218,6 @@
             renderizarCarrito();
         }
 
-        // 3. CARGAR MENÚ
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
@@ -262,30 +235,22 @@
                 }
 
                 data.forEach(item => {
-                    // Limpieza precio
                     let precioLimpio = item.precio;
                     if (typeof precioLimpio === 'string') precioLimpio = precioLimpio.replace(/[^\d]/g, '');
 
-                    // Select Ventas
                     const option = document.createElement('option');
                     const textoVisible = `${item.codigo} - ${item.descripcion}`;
-                    option.value = textoVisible; 
-                    option.text = textoVisible;
+                    option.value = textoVisible; option.text = textoVisible;
                     option.dataset.precio = precioLimpio || 0; 
                     select.appendChild(option);
 
-                    // Tabla Menú
                     const row = document.createElement('tr');
                     row.innerHTML = `<td><strong>${item.codigo}</strong></td><td>${item.descripcion}</td><td>$${precioLimpio}</td>`;
                     tableBody.appendChild(row);
                 });
-            } catch (error) {
-                console.error(error);
-                document.getElementById('venta-producto').innerHTML = '<option>Error API</option>';
-            }
+            } catch (error) { document.getElementById('venta-producto').innerHTML = '<option>Error API</option>'; }
         }
 
-        // 4. ENVIO DE DATOS (PROCESAR CARRITO)
         async function enviarDatos(datos) {
             try {
                 const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(datos) });
@@ -294,14 +259,10 @@
             } catch (error) { return false; }
         }
 
-        // LISTENERS
+        // --- ENVIAR VENTA (CARRITO COMPLETO) ---
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            if (carrito.length === 0) {
-                alert("¡El carrito está vacío! Agrega productos con el botón (+)");
-                return;
-            }
+            if (carrito.length === 0) { alert("¡El carrito está vacío!"); return; }
 
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = 'Guardando venta...';
@@ -309,43 +270,30 @@
 
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
-            const cliente = document.getElementById('venta-cliente').value;
-            const pago = document.getElementById('venta-pago').value;
-            const obs = document.getElementById('venta-observacion').value;
 
-            // ENVIAR CADA PRODUCTO DEL CARRITO UNO POR UNO
-            // (Para mantener compatibilidad con tu hoja de cálculo actual)
-            let errores = 0;
-            
-            for (const item of carrito) {
-                const datos = {
-                    action: "guardarVenta",
-                    dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
-                    cliente: cliente,
-                    producto: item.producto, 
-                    valor: item.valor,
-                    pago: pago,
-                    observacion: obs
-                };
-                
-                const exito = await enviarDatos(datos);
-                if (!exito) errores++;
-            }
+            // Enviamos el CARRITO COMPLETO para que el backend use un solo ID de factura
+            const datosVenta = {
+                action: "guardarVenta",
+                dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
+                cliente: document.getElementById('venta-cliente').value,
+                pago: document.getElementById('venta-pago').value,
+                observacion: document.getElementById('venta-observacion').value,
+                carrito: carrito 
+            };
 
-            if (errores === 0) {
+            const exito = await enviarDatos(datosVenta);
+
+            if (exito) {
                 statusDiv.textContent = '¡VENTA REGISTRADA!';
                 statusDiv.style.color = 'green';
-                
-                // Resetear todo
                 carrito = [];
                 renderizarCarrito();
                 document.getElementById('venta-cliente').value = "";
                 document.getElementById('venta-observacion').value = "";
                 document.getElementById('venta-fecha').valueAsDate = new Date();
-                
                 setTimeout(() => statusDiv.textContent = '', 3000);
             } else {
-                statusDiv.textContent = 'Hubo errores al guardar algunos productos.';
+                statusDiv.textContent = 'Error al guardar.';
                 statusDiv.style.color = 'red';
             }
         });
