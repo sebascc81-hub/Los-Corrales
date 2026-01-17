@@ -6,25 +6,27 @@
     <title>Los Corrales - Gestión</title>
     <style>
         /* =========================================
-           NUEVA PALETA DE COLORES (BASADA EN EL LOGO)
+           PALETA DE COLORES (ESTILO LOS CORRALES)
            ========================================= */
         :root {
-            --primary-red: #c0392b;       /* Rojo intenso del logo (Asados & Broaster) */
-            --primary-yellow: #f1c40f;    /* Amarillo dorado del logo (Los Corrales) */
-            --dark-brown: #4e342e;        /* Marrón oscuro para textos (Fondo del logo) */
-            --light-cream: #fdf6e3;       /* Fondo crema cálido */
-            --focus-yellow: #fffde7;      /* Fondo amarillo muy claro para el foco */
-            --hover-red: #a93226;         /* Rojo más oscuro para hover */
-            --hover-yellow: #d4ac0d;      /* Amarillo más oscuro para hover */
+            --primary-red: #c0392b;       /* Rojo intenso */
+            --primary-yellow: #f1c40f;    /* Amarillo dorado */
+            --dark-brown: #4e342e;        /* Marrón oscuro texto */
+            --light-cream: #fdf6e3;       /* Fondo crema */
+            --focus-yellow: #fffde7;      /* Fondo foco */
+            --hover-red: #a93226;
+            --hover-yellow: #d4ac0d;
         }
 
-        /* ESTILO VISUAL (MONTECLARO REDISEÑADO) */
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--light-cream);
             margin: 0;
             padding: 0;
             color: var(--dark-brown);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Para que el footer se vaya al final si hay poco contenido */
         }
         
         header {
@@ -50,7 +52,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             opacity: 0.9;
-            color: white; /* Un poco más claro para contraste */
+            color: white;
         }
 
         .tabs-container {
@@ -80,7 +82,8 @@
             border-bottom: 4px solid var(--primary-red);
         }
 
-        .main-container { max-width: 600px; margin: 0 auto 50px auto; padding: 0 20px; }
+        .main-container { max-width: 600px; margin: 0 auto 30px auto; padding: 0 20px; flex: 1; }
+        
         .tab-content {
             display: none;
             background: white;
@@ -121,7 +124,7 @@
             box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.1);
         }
 
-        /* BOTONES PRINCIPALES (ROJO) */
+        /* BOTONES */
         .btn-submit {
             width: 100%;
             background-color: var(--primary-red);
@@ -139,15 +142,10 @@
         }
         .btn-submit:hover { background-color: var(--hover-red); color: white; }
         
-        /* BOTÓN GASTO (ROJO IGUAL AL PRINCIPAL PARA CONSISTENCIA) */
         .btn-gasto { background-color: var(--primary-red); }
         .btn-gasto:hover { background-color: var(--hover-red); }
 
-        /* BOTÓN MENÚ Y AGREGAR (AMARILLO DORADO) */
-        .btn-menu {
-            background-color: var(--primary-yellow);
-            color: var(--dark-brown);
-        }
+        .btn-menu { background-color: var(--primary-yellow); color: var(--dark-brown); }
         .btn-menu:hover { background-color: var(--hover-yellow); }
         
         .btn-add {
@@ -168,10 +166,10 @@
         }
         .btn-add:hover { background-color: var(--hover-yellow); }
 
-        /* CARRITO Y TABLAS */
+        /* TABLAS Y REPORTES */
         .cart-wrapper, .report-wrapper {
             margin-top: 20px;
-            background: #fff; /* Fondo blanco para contraste */
+            background: #fff;
             padding: 15px;
             border-radius: 6px;
             border: 1px solid #eee;
@@ -188,25 +186,12 @@
         }
         
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th {
-            background-color: var(--primary-red);
-            color: var(--primary-yellow);
-            padding: 10px;
-            text-align: left;
-            font-weight: 700;
-        }
+        th { background-color: var(--primary-red); color: var(--primary-yellow); padding: 10px; text-align: left; font-weight: 700; }
         td { padding: 10px; border-bottom: 1px solid #eee; color: var(--dark-brown); }
         tr:nth-child(even) { background-color: #f9f9f9; }
         
         .col-accion { width: 30px; text-align: center; }
-        .btn-delete {
-            color: var(--primary-red);
-            cursor: pointer;
-            font-weight: bold;
-            border: none;
-            background: none;
-            font-size: 18px;
-        }
+        .btn-delete { color: var(--primary-red); cursor: pointer; font-weight: bold; border: none; background: none; font-size: 18px; }
         .btn-delete:hover { color: var(--hover-red); }
         
         .total-display {
@@ -221,6 +206,23 @@
         .menu-list-wrapper { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; }
         .table-responsive { max-height: 250px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
         #status-message { text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px; }
+
+        /* NUEVO: FOOTER CON CRÉDITOS */
+        footer {
+            background-color: var(--primary-red);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            margin-top: auto;
+            border-top: 4px solid var(--primary-yellow);
+        }
+        footer strong {
+            color: var(--primary-yellow);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 600px) { .form-row { flex-direction: column; gap: 10px; align-items: stretch; } header h1 { font-size: 32px; } }
@@ -338,7 +340,8 @@
                         <thead>
                             <tr>
                                 <th>Fecha</th>
-                                <th>Factura</th> <th>Descripción</th>
+                                <th>Factura</th>
+                                <th>Descripción</th>
                                 <th style="text-align:right">Valor</th>
                             </tr>
                         </thead>
@@ -352,8 +355,11 @@
         <div id="status-message"></div>
     </div>
 
+    <footer>
+        <p>Desarrollado por <strong>Monteclaro Inmobiliaria SAS</strong> &copy; 2026</p>
+    </footer>
+
     <script>
-        // TU URL DE LA API
         const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec";
 
         document.getElementById('venta-fecha').valueAsDate = new Date();
@@ -426,12 +432,14 @@
 
                 data.forEach(item => {
                     let precioLimpio = item.precio;
-                    if (typeof precioLimpio === 'string') precioLimpio = precioLimpio.replace(/[^\d]/g, '');
+                    if (precioLimpio !== undefined && precioLimpio !== null) {
+                        precioLimpio = String(precioLimpio).replace(/[^0-9.]/g, ''); 
+                    } else { precioLimpio = "0"; }
 
                     const option = document.createElement('option');
                     const textoVisible = `${item.codigo} - ${item.descripcion}`;
                     option.value = textoVisible; option.text = textoVisible;
-                    option.dataset.precio = precioLimpio || 0; 
+                    option.dataset.precio = precioLimpio; 
                     select.appendChild(option);
 
                     const row = document.createElement('tr');
@@ -449,7 +457,7 @@
             } catch (error) { return false; }
         }
 
-        // --- GENERAR REPORTE (CON FACTURA) ---
+        // --- REPORTES ---
         async function generarReporte(e) {
             e.preventDefault();
             const statusDiv = document.getElementById('status-message');
