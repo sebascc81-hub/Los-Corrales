@@ -191,7 +191,7 @@
                     <div class="form-group">
                         <label>Seleccionar Producto (CÓDIGO)</label>
                         <select id="venta-producto" required onchange="autocompletarPrecio()">
-                            <option value="">Cargando listado...</option>
+                            <option value="" data-precio="0">Cargando listado...</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -278,8 +278,6 @@
         // URL DE TU APPS SCRIPT
         const API_URL = "https://script.google.com/macros/s/AKfycbyH4D06pcZlkY5rS6SnfW7WENlJCt2-bHOYU7P5l1RWhr1EnMfw8pU92dUkAUjYP1Pe/exec";
 
-        let inventarioPrecios = {};
-
         // Fecha de hoy por defecto
         document.getElementById('venta-fecha').valueAsDate = new Date();
 
@@ -296,7 +294,7 @@
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // 2. CARGAR MENÚ EN LISTA DESPLEGABLE
+        // 2. CARGAR MENÚ EN LISTA DESPLEGABLE CON EL PRECIO PEGADO
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
@@ -304,11 +302,10 @@
                 
                 const select = document.getElementById('venta-producto');
                 // Limpiar lista y poner opción por defecto
-                select.innerHTML = '<option value="">-- Seleccione un producto --</option>'; 
-                inventarioPrecios = {};
+                select.innerHTML = '<option value="" data-precio="0">-- Seleccione un producto --</option>'; 
 
                 if(data.length === 0) {
-                    select.innerHTML = '<option value="">No hay productos en el Menú</option>';
+                    select.innerHTML = '<option value="" data-precio="0">No hay productos en el Menú</option>';
                 }
 
                 data.forEach(item => {
@@ -317,16 +314,15 @@
                     // Texto que se ve en la lista: "CÓDIGO - DESCRIPCIÓN"
                     const textoVisible = `${item.codigo} - ${item.descripcion}`;
                     
-                    // El valor que se envía al seleccionar
                     option.value = textoVisible; 
                     option.text = textoVisible;
                     
-                    select.appendChild(option);
+                    // SOLUCIÓN: Guardamos el precio en un atributo oculto llamado "data-precio"
+                    option.dataset.precio = item.precio; 
                     
-                    // Guardar precio
-                    inventarioPrecios[textoVisible] = item.precio;
+                    select.appendChild(option);
                 });
-                console.log("Lista desplegable actualizada.");
+                console.log("Lista desplegable actualizada con precios.");
             } catch (error) {
                 console.error("Error al cargar menú:", error);
                 document.getElementById('venta-producto').innerHTML = '<option>Error cargando menú</option>';
@@ -362,14 +358,18 @@
             }
         }
 
-        // 4. PRECIO AUTOMÁTICO AL SELECCIONAR DE LA LISTA
+        // 4. PRECIO AUTOMÁTICO (CORREGIDO)
         function autocompletarPrecio() {
             const select = document.getElementById('venta-producto');
-            const valorSeleccionado = select.value; // Esto es "CODIGO - NOMBRE"
+            // Buscamos la opción seleccionada actualmente
+            const selectedOption = select.options[select.selectedIndex];
             
-            if(inventarioPrecios[valorSeleccionado]) {
+            // Leemos el precio que guardamos en "data-precio"
+            const precio = selectedOption.dataset.precio;
+            
+            if(precio) {
                 const inputPrecio = document.getElementById('venta-valor');
-                inputPrecio.value = inventarioPrecios[valorSeleccionado];
+                inputPrecio.value = precio;
                 
                 // Efecto visual
                 inputPrecio.style.backgroundColor = "#e3f2fd";
