@@ -6,19 +6,19 @@
     <title>Los Corrales - Gestión</title>
     <style>
         /* =========================================
-           DISEÑO VISUAL (CSS INTEGRADO)
+           DISEÑO VISUAL (ESTILO MONTECLARO)
            ========================================= */
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f9; /* Fondo gris muy suave */
+            background-color: #f4f6f9;
             margin: 0;
             padding: 0;
             color: #333;
         }
 
-        /* --- ENCABEZADO TIPO MONTECLARO --- */
+        /* Encabezado Azul */
         header {
-            background-color: #2b38a3; /* Azul Corporativo */
+            background-color: #2b38a3;
             color: white;
             text-align: center;
             padding: 35px 20px;
@@ -30,7 +30,7 @@
             font-weight: 900;
             margin: 0;
             letter-spacing: -1px;
-            text-transform: uppercase; /* Mayúsculas para impacto */
+            text-transform: uppercase;
         }
 
         header h2 {
@@ -42,7 +42,7 @@
             opacity: 0.9;
         }
 
-        /* --- PESTAÑAS DE NAVEGACIÓN --- */
+        /* Pestañas */
         .tabs-container {
             background-color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -67,20 +67,13 @@
             padding: 15px 0;
             cursor: pointer;
             border-bottom: 4px solid transparent;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
-        .tab-btn:hover {
-            color: #2b38a3;
-            background-color: #fcfcfc;
-        }
+        .tab-btn:hover { color: #2b38a3; background-color: #fcfcfc; }
+        .tab-btn.active { color: #2b38a3; border-bottom: 4px solid #2b38a3; }
 
-        .tab-btn.active {
-            color: #2b38a3;
-            border-bottom: 4px solid #2b38a3;
-        }
-
-        /* --- CONTENEDOR DEL FORMULARIO --- */
+        /* Contenedor Principal */
         .main-container {
             max-width: 500px;
             margin: 0 auto 50px auto;
@@ -88,7 +81,7 @@
         }
 
         .tab-content {
-            display: none; /* Oculto por defecto */
+            display: none;
             background: white;
             padding: 30px;
             border-radius: 8px;
@@ -96,11 +89,9 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
-        .tab-content.active {
-            display: block; /* Mostrar activo */
-        }
+        .tab-content.active { display: block; }
 
-        /* --- CAMPOS DEL FORMULARIO --- */
+        /* Formularios */
         .form-group { margin-bottom: 20px; }
         .form-row { display: flex; gap: 15px; }
         .form-row .form-group { flex: 1; }
@@ -120,17 +111,17 @@
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 16px;
-            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+            box-sizing: border-box;
             font-family: inherit;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #2b38a3;
             background-color: #f8fbff;
         }
 
-        /* --- BOTONES DE ACCIÓN --- */
+        /* Botones */
         .btn-submit {
             width: 100%;
             background-color: #2b38a3;
@@ -146,17 +137,14 @@
             margin-top: 10px;
             transition: background 0.3s;
         }
-
         .btn-submit:hover { background-color: #1a237e; }
         
-        /* Botones de colores específicos */
         .btn-gasto { background-color: #c62828; }
         .btn-gasto:hover { background-color: #b71c1c; }
 
         .btn-menu { background-color: #f57c00; }
         .btn-menu:hover { background-color: #e65100; }
 
-        /* Mensajes de estado */
         #status-message {
             text-align: center;
             margin-top: 20px;
@@ -164,13 +152,8 @@
             min-height: 24px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Móvil */
-        @media (max-width: 600px) {
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 600px) { 
             .form-row { flex-direction: column; gap: 0; }
             header h1 { font-size: 32px; }
         }
@@ -195,6 +178,12 @@
 
         <div id="ventas" class="tab-content active">
             <form id="ventas-form">
+                
+                <div class="form-group">
+                    <label>Fecha de Venta</label>
+                    <input type="date" id="venta-fecha" required>
+                </div>
+
                 <div class="form-group">
                     <label>Cliente</label>
                     <input type="text" id="venta-cliente" required placeholder="Nombre del cliente">
@@ -217,7 +206,6 @@
                     <select id="venta-pago">
                         <option value="Efectivo">Efectivo</option>
                         <option value="Transferencia">Transferencia</option>
-                        <option value="Nequi">Nequi</option>
                     </select>
                 </div>
 
@@ -247,7 +235,6 @@
                         <select id="gasto-pago">
                             <option value="Efectivo">Efectivo</option>
                             <option value="Transferencia">Transferencia</option>
-                            <option value="Nequi">Nequi</option>
                         </select>
                     </div>
                 </div>
@@ -286,28 +273,27 @@
         </div>
 
         <div id="status-message"></div>
-
     </div>
 
     <script>
         // ------------------------------------------------------------------
-        // CONFIGURACIÓN: PEGA AQUÍ TU URL DE APPS SCRIPT
+        // TU NUEVA URL DE APPS SCRIPT:
         // ------------------------------------------------------------------
-        const API_URL = "https://script.google.com/macros/s/AKfycbwSxe7Cv6YNqzZzxGI_fM_nvlRQczsbXVRCAUnMIAUTKFoeoXLXh7HjpgJrLC5AMPBV/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbyH4D06pcZlkY5rS6SnfW7WENlJCt2-bHOYU7P5l1RWhr1EnMfw8pU92dUkAUjYP1Pe/exec";
         // ------------------------------------------------------------------
 
         let inventarioPrecios = {};
 
-        // 1. CAMBIAR PESTAÑAS
+        // Establecer fecha de hoy por defecto al cargar
+        document.getElementById('venta-fecha').valueAsDate = new Date();
+
+        // 1. CONTROL DE PESTAÑAS
         function openTab(tabName) {
-            // Ocultar todo
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            // Mostrar selección
             document.getElementById(tabName).classList.add('active');
             
-            // Activar botón (lógica simple por orden: 0=Ventas, 1=Gastos, 2=Menú)
             const buttons = document.querySelectorAll('.tab-btn');
             if(tabName === 'ventas') buttons[0].classList.add('active');
             if(tabName === 'gastos') buttons[1].classList.add('active');
@@ -321,8 +307,8 @@
                 const data = await response.json();
                 
                 const dataList = document.getElementById('lista-productos');
-                dataList.innerHTML = ''; // Limpiar
-                inventarioPrecios = {};  // Reiniciar memoria
+                dataList.innerHTML = ''; 
+                inventarioPrecios = {};
 
                 data.forEach(item => {
                     const option = document.createElement('option');
@@ -330,7 +316,7 @@
                     dataList.appendChild(option);
                     inventarioPrecios[item.descripcion] = item.precio;
                 });
-                console.log("Menú cargado correctamente");
+                console.log("Menú actualizado");
             } catch (error) {
                 console.error("Error al cargar menú:", error);
             }
@@ -339,11 +325,10 @@
         // 3. ENVIAR DATOS (POST)
         async function enviarDatos(datos) {
             const statusDiv = document.getElementById('status-message');
-            statusDiv.textContent = 'Guardando...';
+            statusDiv.textContent = 'Guardando en la nube...';
             statusDiv.style.color = '#2b38a3';
 
             try {
-                // Fetch simple usando text/plain para evitar errores de CORS con Google
                 const response = await fetch(API_URL, {
                     method: "POST",
                     body: JSON.stringify(datos)
@@ -352,9 +337,9 @@
                 const result = await response.json();
                 
                 if(result.status === "success") {
-                    statusDiv.textContent = '¡REGISTRO GUARDADO CON ÉXITO!';
+                    statusDiv.textContent = '¡REGISTRO EXITOSO!';
                     statusDiv.style.color = 'green';
-                    setTimeout(() => statusDiv.textContent = '', 3000); // Borrar mensaje a los 3 seg
+                    setTimeout(() => statusDiv.textContent = '', 3000);
                     return true;
                 } else {
                     throw new Error(result.message);
@@ -368,33 +353,41 @@
 
         // 4. AUTOCOMPLETAR PRECIO
         function autocompletarPrecio() {
-            const prodInput = document.getElementById('venta-producto');
-            const valInput = document.getElementById('venta-valor');
-            const producto = prodInput.value;
-
-            if(inventarioPrecios[producto]) {
-                valInput.value = inventarioPrecios[producto];
-                // Efecto visual de "flash"
-                valInput.style.backgroundColor = "#e3f2fd";
-                setTimeout(() => valInput.style.backgroundColor = "white", 500);
+            const prod = document.getElementById('venta-producto').value;
+            if(inventarioPrecios[prod]) {
+                const input = document.getElementById('venta-valor');
+                input.value = inventarioPrecios[prod];
+                input.style.backgroundColor = "#e3f2fd";
+                setTimeout(() => input.style.backgroundColor = "white", 500);
             }
         }
 
-        // --- EVENTOS DE LOS BOTONES (LISTENERS) ---
+        // --- LISTENERS (BOTONES DE GUARDAR) ---
 
         // GUARDAR VENTA
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Procesar la fecha manual
+            const fechaInput = document.getElementById('venta-fecha').value; 
+            const fechaObj = new Date(fechaInput + 'T00:00:00'); // T00:00:00 evita problemas de zona horaria
+
             const datos = {
                 action: "guardarVenta",
+                dia: fechaObj.getDate(),
+                mes: fechaObj.getMonth() + 1,
+                anio: fechaObj.getFullYear(),
                 cliente: document.getElementById('venta-cliente').value,
                 producto: document.getElementById('venta-producto').value,
                 valor: document.getElementById('venta-valor').value,
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value
             };
-            // Si se guarda bien, limpiar formulario
-            if(await enviarDatos(datos)) document.getElementById('ventas-form').reset();
+            
+            if(await enviarDatos(datos)) {
+                document.getElementById('ventas-form').reset();
+                document.getElementById('venta-fecha').valueAsDate = new Date(); // Resetear fecha a hoy
+            }
         });
 
         // GUARDAR GASTO
@@ -410,7 +403,7 @@
             if(await enviarDatos(datos)) document.getElementById('gastos-form').reset();
         });
 
-        // GUARDAR EN MENÚ
+        // GUARDAR PRODUCTO EN MENÚ
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -421,11 +414,11 @@
             };
             if(await enviarDatos(datos)) {
                 document.getElementById('menu-form').reset();
-                cargarMenu(); // Recargar la lista para que aparezca en Ventas
+                cargarMenu(); 
             }
         });
 
-        // INICIAR: Cargar menú al abrir la página
+        // Iniciar
         cargarMenu();
 
     </script>
