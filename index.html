@@ -101,6 +101,7 @@
             text-transform: uppercase;
         }
 
+        /* Estilo para Inputs y el Select Desplegable */
         input, select, textarea {
             width: 100%;
             padding: 12px;
@@ -109,6 +110,7 @@
             font-size: 16px;
             box-sizing: border-box;
             font-family: inherit;
+            background-color: #fff;
         }
 
         input:focus, select:focus {
@@ -117,6 +119,7 @@
             background-color: #f8fbff;
         }
 
+        /* Botones */
         .btn-submit {
             width: 100%;
             background-color: #2b38a3;
@@ -186,10 +189,10 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Código o Producto</label>
-                        <input type="text" id="venta-producto" list="lista-productos" required placeholder="Escribe el código..." onchange="autocompletarPrecio()">
-                        <datalist id="lista-productos">
-                            </datalist>
+                        <label>Seleccionar Producto (CÓDIGO)</label>
+                        <select id="venta-producto" required onchange="autocompletarPrecio()">
+                            <option value="">Cargando listado...</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Valor ($)</label>
@@ -272,7 +275,7 @@
     </div>
 
     <script>
-        // TU URL ACTUAL (NO LA TOQUES)
+        // URL DE TU APPS SCRIPT
         const API_URL = "https://script.google.com/macros/s/AKfycbyH4D06pcZlkY5rS6SnfW7WENlJCt2-bHOYU7P5l1RWhr1EnMfw8pU92dUkAUjYP1Pe/exec";
 
         let inventarioPrecios = {};
@@ -280,6 +283,7 @@
         // Fecha de hoy por defecto
         document.getElementById('venta-fecha').valueAsDate = new Date();
 
+        // 1. PESTAÑAS
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -292,44 +296,47 @@
             if(tabName === 'menu') buttons[2].classList.add('active');
         }
 
-        // CARGAR MENÚ: AHORA INCLUYE EL CÓDIGO EN LA BÚSQUEDA
+        // 2. CARGAR MENÚ EN LISTA DESPLEGABLE
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
                 const data = await response.json();
                 
-                const dataList = document.getElementById('lista-productos');
-                dataList.innerHTML = ''; 
+                const select = document.getElementById('venta-producto');
+                // Limpiar lista y poner opción por defecto
+                select.innerHTML = '<option value="">-- Seleccione un producto --</option>'; 
                 inventarioPrecios = {};
 
                 if(data.length === 0) {
-                    console.log("No se encontraron productos en la hoja MENU");
+                    select.innerHTML = '<option value="">No hay productos en el Menú</option>';
                 }
 
                 data.forEach(item => {
                     const option = document.createElement('option');
                     
-                    // TRUCO: Unimos Codigo y Descripcion para poder buscar por ambos
-                    // Ejemplo: "001 - Hamburguesa"
-                    const valorCompuesto = `${item.codigo} - ${item.descripcion}`;
+                    // Texto que se ve en la lista: "CÓDIGO - DESCRIPCIÓN"
+                    const textoVisible = `${item.codigo} - ${item.descripcion}`;
                     
-                    option.value = valorCompuesto; 
-                    dataList.appendChild(option);
+                    // El valor que se envía al seleccionar
+                    option.value = textoVisible; 
+                    option.text = textoVisible;
                     
-                    // Guardamos el precio asociado a ese texto compuesto
-                    inventarioPrecios[valorCompuesto] = item.precio;
+                    select.appendChild(option);
+                    
+                    // Guardar precio
+                    inventarioPrecios[textoVisible] = item.precio;
                 });
-                console.log("Menú actualizado con códigos.");
+                console.log("Lista desplegable actualizada.");
             } catch (error) {
                 console.error("Error al cargar menú:", error);
-                document.getElementById('status-message').textContent = "Error de conexión con la hoja MENU";
+                document.getElementById('venta-producto').innerHTML = '<option>Error cargando menú</option>';
             }
         }
 
-        // ENVIAR DATOS
+        // 3. ENVIAR DATOS
         async function enviarDatos(datos) {
             const statusDiv = document.getElementById('status-message');
-            statusDiv.textContent = 'Guardando en la nube...';
+            statusDiv.textContent = 'Guardando...';
             statusDiv.style.color = '#2b38a3';
 
             try {
@@ -355,15 +362,18 @@
             }
         }
 
-        // AUTOCOMPLETAR
+        // 4. PRECIO AUTOMÁTICO AL SELECCIONAR DE LA LISTA
         function autocompletarPrecio() {
-            const prod = document.getElementById('venta-producto').value;
-            // Busca la coincidencia exacta "CODIGO - NOMBRE"
-            if(inventarioPrecios[prod]) {
-                const input = document.getElementById('venta-valor');
-                input.value = inventarioPrecios[prod];
-                input.style.backgroundColor = "#e3f2fd";
-                setTimeout(() => input.style.backgroundColor = "white", 500);
+            const select = document.getElementById('venta-producto');
+            const valorSeleccionado = select.value; // Esto es "CODIGO - NOMBRE"
+            
+            if(inventarioPrecios[valorSeleccionado]) {
+                const inputPrecio = document.getElementById('venta-valor');
+                inputPrecio.value = inventarioPrecios[valorSeleccionado];
+                
+                // Efecto visual
+                inputPrecio.style.backgroundColor = "#e3f2fd";
+                setTimeout(() => inputPrecio.style.backgroundColor = "white", 500);
             }
         }
 
@@ -381,7 +391,7 @@
                 mes: fechaObj.getMonth() + 1,
                 anio: fechaObj.getFullYear(),
                 cliente: document.getElementById('venta-cliente').value,
-                producto: document.getElementById('venta-producto').value, // Enviará "CODIGO - NOMBRE"
+                producto: document.getElementById('venta-producto').value, // Envía lo seleccionado de la lista
                 valor: document.getElementById('venta-valor').value,
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value
@@ -390,6 +400,8 @@
             if(await enviarDatos(datos)) {
                 document.getElementById('ventas-form').reset();
                 document.getElementById('venta-fecha').valueAsDate = new Date(); 
+                // Recargar el menú por si acaso se agregó algo nuevo mientras tanto
+                cargarMenu();
             }
         });
 
