@@ -26,7 +26,7 @@
             color: var(--dark-brown);
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Para que el footer se vaya al final si hay poco contenido */
+            min-height: 100vh;
         }
         
         header {
@@ -61,7 +61,7 @@
             margin-bottom: 30px;
             border-bottom: 2px solid #eee;
         }
-        .tabs { display: flex; justify-content: center; max-width: 600px; margin: 0 auto; flex-wrap: wrap; }
+        .tabs { display: flex; justify-content: center; max-width: 800px; margin: 0 auto; flex-wrap: wrap; }
         .tab-btn {
             flex: 1;
             background: none;
@@ -207,7 +207,6 @@
         .table-responsive { max-height: 250px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
         #status-message { text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px; }
 
-        /* NUEVO: FOOTER CON CRÉDITOS */
         footer {
             background-color: var(--primary-red);
             color: rgba(255, 255, 255, 0.8);
@@ -240,6 +239,8 @@
             <button class="tab-btn active" onclick="openTab('ventas')">Ventas</button>
             <button class="tab-btn" onclick="openTab('gastos')">Gastos</button>
             <button class="tab-btn" onclick="openTab('menu')">Menú</button>
+            <button class="tab-btn" onclick="openTab('proveedores')">Proveedores</button>
+            <button class="tab-btn" onclick="openTab('clientes')">Clientes</button>
             <button class="tab-btn" onclick="openTab('reportes')">📊 Reportes</button>
         </div>
     </div>
@@ -316,6 +317,54 @@
             </div>
         </div>
 
+        <div id="proveedores" class="tab-content">
+            <div style="text-align: center; margin-bottom: 20px; color: var(--primary-red); font-weight: 900; font-size: 18px; text-transform: uppercase;">REGISTRAR PROVEEDOR</div>
+            <form id="proveedor-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" id="prov-codigo" required placeholder="Ej: PR-01">
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                        <label>Nombre</label>
+                        <input type="text" id="prov-nombre" required placeholder="Nombre Empresa/Persona">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tipo (Rubro)</label>
+                    <input type="text" id="prov-tipo" required placeholder="Ej: Carnes, Verduras, Aseo...">
+                </div>
+                <button type="submit" class="btn-submit" style="background-color: var(--dark-brown); color: var(--primary-yellow);">GUARDAR PROVEEDOR</button>
+            </form>
+        </div>
+
+        <div id="clientes" class="tab-content">
+            <div style="text-align: center; margin-bottom: 20px; color: var(--primary-red); font-weight: 900; font-size: 18px; text-transform: uppercase;">REGISTRAR CLIENTE</div>
+            <form id="cliente-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" id="cli-codigo" required placeholder="Ej: C-001">
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="cli-nombre" required placeholder="Nombre del Cliente">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" id="cli-telefono" placeholder="Número de contacto">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" id="cli-correo" placeholder="email@ejemplo.com">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" style="background-color: var(--primary-yellow); color: var(--dark-brown);">GUARDAR CLIENTE</button>
+            </form>
+        </div>
+
         <div id="reportes" class="tab-content">
             <div style="text-align: center; margin-bottom: 20px; color: var(--primary-red); font-weight: 900; font-size: 18px; text-transform: uppercase;">FILTRAR MOVIMIENTOS</div>
             <form id="reporte-form" onsubmit="generarReporte(event)">
@@ -360,7 +409,10 @@
     </footer>
 
     <script>
+        // =========================================================
+        // PEGA AQUÍ LA URL DE TU SCRIPT DE GOOGLE:
         const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec";
+        // =========================================================
 
         document.getElementById('venta-fecha').valueAsDate = new Date();
         document.getElementById('rep-inicio').valueAsDate = new Date();
@@ -374,10 +426,13 @@
             document.getElementById(tabName).classList.add('active');
             
             const btns = document.querySelectorAll('.tab-btn');
+            // Mapeo manual para los 6 botones
             if(tabName === 'ventas') btns[0].classList.add('active');
             if(tabName === 'gastos') btns[1].classList.add('active');
             if(tabName === 'menu') btns[2].classList.add('active');
-            if(tabName === 'reportes') btns[3].classList.add('active');
+            if(tabName === 'proveedores') btns[3].classList.add('active');
+            if(tabName === 'clientes') btns[4].classList.add('active');
+            if(tabName === 'reportes') btns[5].classList.add('active');
         }
 
         // --- CARRITO ---
@@ -446,7 +501,7 @@
                     row.innerHTML = `<td><strong>${item.codigo}</strong></td><td>${item.descripcion}</td><td>$${precioLimpio}</td>`;
                     tableBody.appendChild(row);
                 });
-            } catch (error) { document.getElementById('venta-producto').innerHTML = '<option>Error API</option>'; }
+            } catch (error) { console.log("Error cargando menú (puede ser normal si la hoja está vacía)"); }
         }
 
         async function enviarDatos(datos) {
@@ -455,6 +510,17 @@
                 const result = await response.json();
                 return result.status === "success";
             } catch (error) { return false; }
+        }
+
+        function autocompletarPrecio() {
+            const select = document.getElementById('venta-producto');
+            const precio = select.options[select.selectedIndex].dataset.precio;
+            const inputVal = document.getElementById('venta-valor');
+            if(precio && precio !== "0") {
+                inputVal.value = precio;
+                inputVal.style.backgroundColor = "var(--focus-yellow)";
+                setTimeout(() => inputVal.style.backgroundColor = "white", 500);
+            } else { inputVal.value = 0; }
         }
 
         // --- REPORTES ---
@@ -504,7 +570,9 @@
             } catch (error) { statusDiv.textContent = "Error conexión"; }
         }
 
-        // --- ENVIAR ---
+        // --- LISTENERS (ENVIAR FORMULARIOS) ---
+
+        // 1. VENTAS
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (carrito.length === 0) { alert("Carrito vacío"); return; }
@@ -535,6 +603,7 @@
             }
         });
 
+        // 2. GASTOS
         document.getElementById('gastos-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -550,6 +619,7 @@
             }
         });
 
+        // 3. MENU
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -565,16 +635,50 @@
             }
         });
 
-        function autocompletarPrecio() {
-            const select = document.getElementById('venta-producto');
-            const precio = select.options[select.selectedIndex].dataset.precio;
-            const inputVal = document.getElementById('venta-valor');
-            if(precio && precio !== "0") {
-                inputVal.value = precio;
-                inputVal.style.backgroundColor = "var(--focus-yellow)";
-                setTimeout(() => inputVal.style.backgroundColor = "white", 500);
-            } else { inputVal.value = 0; }
-        }
+        // 4. PROVEEDORES
+        document.getElementById('proveedor-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const datos = {
+                action: "guardarProveedor",
+                codigo: document.getElementById('prov-codigo').value,
+                nombre: document.getElementById('prov-nombre').value,
+                tipo: document.getElementById('prov-tipo').value
+            };
+            
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = 'Guardando Proveedor...';
+            
+            if(await enviarDatos(datos)) {
+                document.getElementById('proveedor-form').reset();
+                alert("Proveedor guardado correctamente");
+                statusDiv.textContent = '';
+            } else {
+                alert("Error al guardar");
+            }
+        });
+
+        // 5. CLIENTES
+        document.getElementById('cliente-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const datos = {
+                action: "guardarCliente",
+                codigo: document.getElementById('cli-codigo').value,
+                nombre: document.getElementById('cli-nombre').value,
+                telefono: document.getElementById('cli-telefono').value,
+                correo: document.getElementById('cli-correo').value
+            };
+            
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = 'Guardando Cliente...';
+
+            if(await enviarDatos(datos)) {
+                document.getElementById('cliente-form').reset();
+                alert("Cliente guardado correctamente");
+                statusDiv.textContent = '';
+            } else {
+                alert("Error al guardar");
+            }
+        });
 
         cargarMenu();
     </script>
