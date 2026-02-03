@@ -357,6 +357,13 @@
                 </div>
                 <button type="submit" class="btn-submit" style="background-color: var(--dark-brown); color: var(--primary-yellow);">GUARDAR PROVEEDOR</button>
             </form>
+            
+            <div class="menu-list-wrapper">
+                <div class="cart-title">PROVEEDORES REGISTRADOS</div>
+                <div class="table-responsive">
+                    <table><thead><tr><th>Cód</th><th>Nombre</th><th>Tipo</th></tr></thead><tbody id="prov-table-body"><tr><td colspan="3">Cargando...</td></tr></tbody></table>
+                </div>
+            </div>
         </div>
 
         <div id="clientes" class="tab-content">
@@ -384,6 +391,13 @@
                 </div>
                 <button type="submit" class="btn-submit" style="background-color: var(--primary-yellow); color: var(--dark-brown);">GUARDAR CLIENTE</button>
             </form>
+            
+            <div class="menu-list-wrapper">
+                <div class="cart-title">CLIENTES REGISTRADOS</div>
+                <div class="table-responsive">
+                    <table><thead><tr><th>Cód</th><th>Nombre</th><th>Teléfono</th></tr></thead><tbody id="cli-table-body"><tr><td colspan="3">Cargando...</td></tr></tbody></table>
+                </div>
+            </div>
         </div>
 
         <div id="reportes" class="tab-content">
@@ -528,12 +542,25 @@
             try {
                 const response = await fetch(`${API_URL}?action=leerClientes`);
                 const clientes = await response.json();
+                
+                // Llenar datalist
                 const dataList = document.getElementById('lista-clientes');
                 dataList.innerHTML = ''; 
-                clientes.forEach(nombre => {
+                
+                // Llenar Tabla
+                const tbody = document.getElementById('cli-table-body');
+                tbody.innerHTML = '';
+
+                clientes.forEach(c => {
+                    // Datalist
                     const option = document.createElement('option');
-                    option.value = nombre;
+                    option.value = c.nombre;
                     dataList.appendChild(option);
+                    
+                    // Tabla
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td><strong>${c.codigo}</strong></td><td>${c.nombre}</td><td>${c.telefono}</td>`;
+                    tbody.appendChild(row);
                 });
             } catch (error) { console.log("Error cargando clientes"); }
         }
@@ -542,12 +569,25 @@
             try {
                 const response = await fetch(`${API_URL}?action=leerProveedores`);
                 const proveedores = await response.json();
+                
+                // Llenar datalist
                 const dataList = document.getElementById('lista-proveedores');
                 dataList.innerHTML = ''; 
-                proveedores.forEach(nombre => {
+                
+                // Llenar Tabla
+                const tbody = document.getElementById('prov-table-body');
+                tbody.innerHTML = '';
+
+                proveedores.forEach(p => {
+                    // Datalist
                     const option = document.createElement('option');
-                    option.value = nombre;
+                    option.value = p.nombre;
                     dataList.appendChild(option);
+                    
+                    // Tabla
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td><strong>${p.codigo}</strong></td><td>${p.nombre}</td><td>${p.tipo}</td>`;
+                    tbody.appendChild(row);
                 });
             } catch (error) { console.log("Error cargando proveedores"); }
         }
