@@ -292,7 +292,11 @@
 
         <div id="gastos" class="tab-content">
             <form id="gastos-form">
-                <div class="form-group"><label>Proveedor</label><input type="text" id="gasto-proveedor" required placeholder="A quién se paga"></div>
+                <div class="form-group">
+                    <label>Proveedor</label>
+                    <input type="text" id="gasto-proveedor" list="lista-proveedores" required placeholder="Buscar o escribir...">
+                    <datalist id="lista-proveedores"></datalist>
+                </div>
                 <div class="form-row">
                     <div class="form-group"><label>Valor ($)</label><input type="number" id="gasto-valor" required placeholder="0"></div>
                     <div class="form-group"><label>Pago</label><select id="gasto-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select></div>
@@ -513,13 +517,26 @@
                 const clientes = await response.json();
                 const dataList = document.getElementById('lista-clientes');
                 dataList.innerHTML = ''; 
-
                 clientes.forEach(nombre => {
                     const option = document.createElement('option');
                     option.value = nombre;
                     dataList.appendChild(option);
                 });
             } catch (error) { console.log("Error cargando clientes"); }
+        }
+
+        async function cargarProveedores() {
+            try {
+                const response = await fetch(`${API_URL}?action=leerProveedores`);
+                const proveedores = await response.json();
+                const dataList = document.getElementById('lista-proveedores');
+                dataList.innerHTML = ''; 
+                proveedores.forEach(nombre => {
+                    const option = document.createElement('option');
+                    option.value = nombre;
+                    dataList.appendChild(option);
+                });
+            } catch (error) { console.log("Error cargando proveedores"); }
         }
 
         async function enviarDatos(datos) {
@@ -621,7 +638,7 @@
                 statusDiv.style.color = 'green';
                 carrito = [];
                 renderizarCarrito();
-                inputCliente.value = "CONSUMIDOR FINAL"; // Reset a default
+                inputCliente.value = "CONSUMIDOR FINAL"; 
                 document.getElementById('venta-observacion').value = "";
                 setTimeout(() => statusDiv.textContent = '', 3000);
             }
@@ -672,6 +689,7 @@
                 document.getElementById('proveedor-form').reset();
                 alert("Proveedor guardado");
                 statusDiv.textContent = '';
+                setTimeout(cargarProveedores, 1000); // Recarga la lista de proveedores
             } else { alert("Error al guardar"); }
         });
 
@@ -691,13 +709,14 @@
                 document.getElementById('cliente-form').reset();
                 alert("Cliente guardado");
                 statusDiv.textContent = '';
-                setTimeout(cargarClientes, 1000); // Recargar lista para el buscador
+                setTimeout(cargarClientes, 1000); 
             } else { alert("Error al guardar"); }
         });
 
         // Cargar datos al inicio
         cargarMenu();
         cargarClientes();
+        cargarProveedores();
     </script>
 </body>
 </html>
