@@ -283,7 +283,12 @@
 
                 <div class="form-group" style="margin-top: 15px;">
                     <label>Medio de Pago</label>
-                    <select id="venta-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
+                    <select id="venta-pago">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Nequi">Nequi</option>
+                        <option value="DaviPlata">DaviPlata</option>
+                        <option value="Transferencia">Transferencia Bancaria</option>
+                    </select>
                 </div>
                 <div class="form-group"><label>Observación</label><textarea id="venta-observacion" rows="1" placeholder="Opcional"></textarea></div>
                 <button type="submit" class="btn-submit">FINALIZAR VENTA</button>
@@ -299,7 +304,15 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label>Valor ($)</label><input type="number" id="gasto-valor" required placeholder="0"></div>
-                    <div class="form-group"><label>Pago</label><select id="gasto-pago"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select></div>
+                    <div class="form-group">
+                        <label>Pago</label>
+                        <select id="gasto-pago">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Nequi">Nequi</option>
+                            <option value="DaviPlata">DaviPlata</option>
+                            <option value="Transferencia">Transferencia Bancaria</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group"><label>Detalle</label><textarea id="gasto-observacion" rows="2" placeholder="Descripción del gasto"></textarea></div>
                 <button type="submit" class="btn-submit btn-gasto">Registrar Gasto</button>
