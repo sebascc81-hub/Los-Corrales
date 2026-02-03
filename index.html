@@ -251,7 +251,11 @@
             <form id="ventas-form">
                 <div class="form-row">
                     <div class="form-group"><label>Fecha</label><input type="date" id="venta-fecha" required></div>
-                    <div class="form-group"><label>Cliente</label><input type="text" id="venta-cliente" required placeholder="Nombre cliente"></div>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" id="venta-cliente" list="lista-clientes" value="CONSUMIDOR FINAL" placeholder="Busca o escribe..." onfocus="this.value=''">
+                        <datalist id="lista-clientes"></datalist>
+                    </div>
                 </div>
                 
                 <div style="background: var(--focus-yellow); border: 1px solid var(--primary-yellow); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -410,8 +414,8 @@
 
     <script>
         // =========================================================
-        // PEGA AQUÍ LA URL DE TU SCRIPT DE GOOGLE:
-        const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec";
+        // URL DE LA API WEB (CONECTADA A TU GOOGLE SHEETS)
+        const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec"; 
         // =========================================================
 
         document.getElementById('venta-fecha').valueAsDate = new Date();
@@ -426,13 +430,12 @@
             document.getElementById(tabName).classList.add('active');
             
             const btns = document.querySelectorAll('.tab-btn');
-            // Mapeo manual para los 6 botones
-            if(tabName === 'ventas') btns[0].classList.add('active');
-            if(tabName === 'gastos') btns[1].classList.add('active');
-            if(tabName === 'menu') btns[2].classList.add('active');
-            if(tabName === 'proveedores') btns[3].classList.add('active');
-            if(tabName === 'clientes') btns[4].classList.add('active');
-            if(tabName === 'reportes') btns[5].classList.add('active');
+            const tabsMap = {
+                'ventas': 0, 'gastos': 1, 'menu': 2, 'proveedores': 3, 'clientes': 4, 'reportes': 5
+            };
+            if (btns[tabsMap[tabName]]) {
+                btns[tabsMap[tabName]].classList.add('active');
+            }
         }
 
         // --- CARRITO ---
@@ -475,7 +478,7 @@
             renderizarCarrito();
         }
 
-        // --- CARGAR MENÚ ---
+        // --- CARGAS DE DATOS ---
         async function cargarMenu() {
             try {
                 const response = await fetch(`${API_URL}?action=leerMenu`);
@@ -501,7 +504,22 @@
                     row.innerHTML = `<td><strong>${item.codigo}</strong></td><td>${item.descripcion}</td><td>$${precioLimpio}</td>`;
                     tableBody.appendChild(row);
                 });
-            } catch (error) { console.log("Error cargando menú (puede ser normal si la hoja está vacía)"); }
+            } catch (error) { console.log("Error cargando menú"); }
+        }
+
+        async function cargarClientes() {
+            try {
+                const response = await fetch(`${API_URL}?action=leerClientes`);
+                const clientes = await response.json();
+                const dataList = document.getElementById('lista-clientes');
+                dataList.innerHTML = ''; 
+
+                clientes.forEach(nombre => {
+                    const option = document.createElement('option');
+                    option.value = nombre;
+                    dataList.appendChild(option);
+                });
+            } catch (error) { console.log("Error cargando clientes"); }
         }
 
         async function enviarDatos(datos) {
@@ -570,11 +588,17 @@
             } catch (error) { statusDiv.textContent = "Error conexión"; }
         }
 
-        // --- LISTENERS (ENVIAR FORMULARIOS) ---
+        // --- LISTENERS ---
 
-        // 1. VENTAS
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Validar Cliente
+            const inputCliente = document.getElementById('venta-cliente');
+            if(inputCliente.value.trim() === "") {
+                inputCliente.value = "CONSUMIDOR FINAL";
+            }
+
             if (carrito.length === 0) { alert("Carrito vacío"); return; }
             const statusDiv = document.getElementById('status-message');
             statusDiv.textContent = 'Enviando...';
@@ -586,7 +610,7 @@
             const datosVenta = {
                 action: "guardarVenta",
                 dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
-                cliente: document.getElementById('venta-cliente').value,
+                cliente: inputCliente.value, // Usar el valor del input
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value,
                 carrito: carrito 
@@ -597,13 +621,12 @@
                 statusDiv.style.color = 'green';
                 carrito = [];
                 renderizarCarrito();
-                document.getElementById('venta-cliente').value = "";
+                inputCliente.value = "CONSUMIDOR FINAL"; // Reset a default
                 document.getElementById('venta-observacion').value = "";
                 setTimeout(() => statusDiv.textContent = '', 3000);
             }
         });
 
-        // 2. GASTOS
         document.getElementById('gastos-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -619,7 +642,6 @@
             }
         });
 
-        // 3. MENU
         document.getElementById('menu-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -635,7 +657,6 @@
             }
         });
 
-        // 4. PROVEEDORES
         document.getElementById('proveedor-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -644,20 +665,16 @@
                 nombre: document.getElementById('prov-nombre').value,
                 tipo: document.getElementById('prov-tipo').value
             };
-            
             const statusDiv = document.getElementById('status-message');
-            statusDiv.textContent = 'Guardando Proveedor...';
+            statusDiv.textContent = 'Guardando...';
             
             if(await enviarDatos(datos)) {
                 document.getElementById('proveedor-form').reset();
-                alert("Proveedor guardado correctamente");
+                alert("Proveedor guardado");
                 statusDiv.textContent = '';
-            } else {
-                alert("Error al guardar");
-            }
+            } else { alert("Error al guardar"); }
         });
 
-        // 5. CLIENTES
         document.getElementById('cliente-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const datos = {
@@ -667,20 +684,20 @@
                 telefono: document.getElementById('cli-telefono').value,
                 correo: document.getElementById('cli-correo').value
             };
-            
             const statusDiv = document.getElementById('status-message');
-            statusDiv.textContent = 'Guardando Cliente...';
+            statusDiv.textContent = 'Guardando...';
 
             if(await enviarDatos(datos)) {
                 document.getElementById('cliente-form').reset();
-                alert("Cliente guardado correctamente");
+                alert("Cliente guardado");
                 statusDiv.textContent = '';
-            } else {
-                alert("Error al guardar");
-            }
+                setTimeout(cargarClientes, 1000); // Recargar lista para el buscador
+            } else { alert("Error al guardar"); }
         });
 
+        // Cargar datos al inicio
         cargarMenu();
+        cargarClientes();
     </script>
 </body>
 </html>
