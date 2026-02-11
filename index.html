@@ -82,7 +82,7 @@
             border-bottom: 4px solid var(--primary-red);
         }
 
-        .main-container { max-width: 600px; margin: 0 auto 30px auto; padding: 0 20px; flex: 1; }
+        .main-container { max-width: 650px; margin: 0 auto 30px auto; padding: 0 20px; flex: 1; }
         
         .tab-content {
             display: none;
@@ -261,14 +261,20 @@
                 <div style="background: var(--focus-yellow); border: 1px solid var(--primary-yellow); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                     <label style="color: var(--primary-red); margin-bottom: 10px; font-size: 14px;">AGREGAR PRODUCTO:</label>
                     <div class="form-row">
-                        <div class="form-group" style="flex: 3;">
+                        <div class="form-group" style="flex: 4;">
                             <label>Producto</label>
                             <select id="venta-producto" onchange="autocompletarPrecio()">
                                 <option value="" data-precio="0">Cargando...</option>
                             </select>
                         </div>
+                        
+                        <div class="form-group" style="flex: 1; min-width: 70px;">
+                            <label>Cant.</label>
+                            <input type="number" id="venta-cantidad" value="1" min="1" placeholder="1">
+                        </div>
+
                         <div class="form-group" style="flex: 2;">
-                            <label>Valor ($)</label>
+                            <label>Precio Unit ($)</label>
                             <input type="number" id="venta-valor" placeholder="0">
                         </div>
                         <button type="button" class="btn-add" onclick="agregarAlCarrito()">+</button>
@@ -277,7 +283,18 @@
 
                 <div class="cart-wrapper" id="cart-container" style="display:none;">
                     <div class="cart-title">Productos en la Venta</div>
-                    <table><thead><tr><th>Producto</th><th style="text-align: right;">Valor</th><th class="col-accion"></th></tr></thead><tbody id="cart-body"></tbody></table>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Producto</th>
+                                <th style="text-align: right;">Unit.</th>
+                                <th style="text-align: right;">Total</th>
+                                <th class="col-accion"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-body"></tbody>
+                    </table>
                     <div class="total-display" id="total-text">Total: $0</div>
                 </div>
 
@@ -445,7 +462,7 @@
 
     <script>
         // =========================================================
-        // URL DE TU SCRIPT DE GOOGLE
+        // URL DE TU SCRIPT DE GOOGLE (CÁMBIALA SI TIENES UNA NUEVA)
         const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec";
         // =========================================================
 
@@ -469,19 +486,34 @@
             }
         }
 
-        // --- CARRITO ---
+        // --- CARRITO ACTUALIZADO (CANTIDAD Y MULTIPLICACIÓN) ---
         function agregarAlCarrito() {
             const select = document.getElementById('venta-producto');
-            const valorInput = document.getElementById('venta-valor');
+            const valorInput = document.getElementById('venta-valor'); // Precio Unitario
+            const cantidadInput = document.getElementById('venta-cantidad'); // Cantidad
+
             const productoNombre = select.value;
-            const productoValor = parseFloat(valorInput.value);
+            const precioUnitario = parseFloat(valorInput.value);
+            const cantidad = parseInt(cantidadInput.value);
 
             if (!productoNombre) { alert("Selecciona un producto"); return; }
-            if (!productoValor || productoValor <= 0) { alert("Ingresa un valor válido"); return; }
+            if (!precioUnitario || precioUnitario <= 0) { alert("Precio inválido"); return; }
+            if (!cantidad || cantidad <= 0) { alert("Cantidad inválida"); return; }
 
-            carrito.push({ producto: productoNombre, valor: productoValor });
+            // Cálculo del subtotal
+            const subtotal = precioUnitario * cantidad;
+
+            carrito.push({ 
+                producto: productoNombre, 
+                cantidad: cantidad,
+                precioUnitario: precioUnitario,
+                valor: subtotal // Valor total de la línea
+            });
+
+            // Resetear campos
             select.value = "";
             valorInput.value = "";
+            cantidadInput.value = "1";
             renderizarCarrito();
         }
 
@@ -497,7 +529,14 @@
                 carrito.forEach((item, index) => {
                     total += item.valor;
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td>${item.producto}</td><td style="text-align: right;">$${item.valor}</td><td class="col-accion"><button type="button" class="btn-delete" onclick="eliminarDelCarrito(${index})">×</button></td>`;
+                    // Tabla: Cantidad | Producto | $ Unit | Total
+                    row.innerHTML = `
+                        <td style="text-align: center;"><strong>${item.cantidad}</strong></td>
+                        <td>${item.producto}</td>
+                        <td style="text-align: right;">$${item.precioUnitario}</td>
+                        <td style="text-align: right; font-weight:bold;">$${item.valor}</td>
+                        <td class="col-accion"><button type="button" class="btn-delete" onclick="eliminarDelCarrito(${index})">×</button></td>
+                    `;
                     tbody.appendChild(row);
                 });
             } else { container.style.display = "none"; }
@@ -542,22 +581,15 @@
             try {
                 const response = await fetch(`${API_URL}?action=leerClientes`);
                 const clientes = await response.json();
-                
-                // Llenar datalist
                 const dataList = document.getElementById('lista-clientes');
                 dataList.innerHTML = ''; 
-                
-                // Llenar Tabla
                 const tbody = document.getElementById('cli-table-body');
                 tbody.innerHTML = '';
 
                 clientes.forEach(c => {
-                    // Datalist
                     const option = document.createElement('option');
                     option.value = c.nombre;
                     dataList.appendChild(option);
-                    
-                    // Tabla
                     const row = document.createElement('tr');
                     row.innerHTML = `<td><strong>${c.codigo}</strong></td><td>${c.nombre}</td><td>${c.telefono}</td>`;
                     tbody.appendChild(row);
@@ -569,22 +601,15 @@
             try {
                 const response = await fetch(`${API_URL}?action=leerProveedores`);
                 const proveedores = await response.json();
-                
-                // Llenar datalist
                 const dataList = document.getElementById('lista-proveedores');
                 dataList.innerHTML = ''; 
-                
-                // Llenar Tabla
                 const tbody = document.getElementById('prov-table-body');
                 tbody.innerHTML = '';
 
                 proveedores.forEach(p => {
-                    // Datalist
                     const option = document.createElement('option');
                     option.value = p.nombre;
                     dataList.appendChild(option);
-                    
-                    // Tabla
                     const row = document.createElement('tr');
                     row.innerHTML = `<td><strong>${p.codigo}</strong></td><td>${p.nombre}</td><td>${p.tipo}</td>`;
                     tbody.appendChild(row);
@@ -604,6 +629,9 @@
             const select = document.getElementById('venta-producto');
             const precio = select.options[select.selectedIndex].dataset.precio;
             const inputVal = document.getElementById('venta-valor');
+            // Reset cantidad a 1 cuando cambia producto
+            document.getElementById('venta-cantidad').value = "1";
+            
             if(precio && precio !== "0") {
                 inputVal.value = precio;
                 inputVal.style.backgroundColor = "var(--focus-yellow)";
@@ -663,7 +691,6 @@
         document.getElementById('ventas-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Validar Cliente
             const inputCliente = document.getElementById('venta-cliente');
             if(inputCliente.value.trim() === "") {
                 inputCliente.value = "CONSUMIDOR FINAL";
@@ -677,13 +704,23 @@
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
 
+            // PREPARAR CARRITO PARA EL BACKEND
+            // Combinamos Nombre + Cantidad para que se guarde bonito en el Sheet
+            // Ejemplo: "Hamburguesa" se convierte en "Hamburguesa (x2)"
+            const carritoProcesado = carrito.map(item => {
+                return {
+                    producto: item.cantidad > 1 ? `${item.producto} (x${item.cantidad})` : item.producto,
+                    valor: item.valor // Enviamos el TOTAL de la línea
+                };
+            });
+
             const datosVenta = {
                 action: "guardarVenta",
                 dia: fechaObj.getDate(), mes: fechaObj.getMonth() + 1, anio: fechaObj.getFullYear(),
-                cliente: inputCliente.value, // Usar el valor del input
+                cliente: inputCliente.value, 
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value,
-                carrito: carrito 
+                carrito: carritoProcesado // Usamos el carrito procesado
             };
 
             if (await enviarDatos(datosVenta)) {
@@ -742,7 +779,7 @@
                 document.getElementById('proveedor-form').reset();
                 alert("Proveedor guardado");
                 statusDiv.textContent = '';
-                setTimeout(cargarProveedores, 1000); // Recarga la lista de proveedores
+                setTimeout(cargarProveedores, 1000); 
             } else { alert("Error al guardar"); }
         });
 
