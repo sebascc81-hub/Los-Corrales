@@ -462,7 +462,7 @@
 
     <script>
         // =========================================================
-        // URL DE TU SCRIPT DE GOOGLE (CÁMBIALA SI TIENES UNA NUEVA)
+        // URL DE TU SCRIPT DE GOOGLE (CÁMBIALA CUANDO CREES EL NUEVO DESPLIEGUE)
         const API_URL = "https://script.google.com/macros/s/AKfycbz2ddIfDmMWrwdQwA5lOXe7LhAR56dFBsIRK2mBtC2nTy-KgKAZXxdkGLbaEeanMwLnWw/exec";
         // =========================================================
 
@@ -704,13 +704,13 @@
             const fechaInput = document.getElementById('venta-fecha').value; 
             const fechaObj = new Date(fechaInput + 'T00:00:00');
 
-            // PREPARAR CARRITO PARA EL BACKEND
-            // Combinamos Nombre + Cantidad para que se guarde bonito en el Sheet
-            // Ejemplo: "Hamburguesa" se convierte en "Hamburguesa (x2)"
+            // --- AQUÍ ESTÁ EL CAMBIO: LOS DATOS VIAJAN SEPARADOS PARA TUS 12 COLUMNAS ---
             const carritoProcesado = carrito.map(item => {
                 return {
-                    producto: item.cantidad > 1 ? `${item.producto} (x${item.cantidad})` : item.producto,
-                    valor: item.valor // Enviamos el TOTAL de la línea
+                    producto: item.producto,           
+                    precioUnitario: item.precioUnitario, 
+                    cantidad: item.cantidad,           
+                    valorTotal: item.valor             
                 };
             });
 
@@ -720,7 +720,7 @@
                 cliente: inputCliente.value, 
                 pago: document.getElementById('venta-pago').value,
                 observacion: document.getElementById('venta-observacion').value,
-                carrito: carritoProcesado // Usamos el carrito procesado
+                carrito: carritoProcesado 
             };
 
             if (await enviarDatos(datosVenta)) {
